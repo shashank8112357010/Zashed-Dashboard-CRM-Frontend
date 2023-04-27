@@ -1,2 +1,2 @@
-# Zashed-Dashboard-CRM-Frontend
-CRM Zashed Fashiontech
+user Name : admin@gmail.com 
+Password: dice@123
