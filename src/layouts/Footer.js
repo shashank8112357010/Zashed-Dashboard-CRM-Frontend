@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 const Footer = () => {
-  const [ date , setDate] = useState(new Date().getFullYear())
+  const date = new Date().getFullYear()
   return (
-    <footer class="footer">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-sm-6">
+    <footer className="footer">
+    <div className="container-fluid">
+        <div className="row">
+            <div className="col-sm-6">
                  © Zashed.
             </div>
-            <div class="col-sm-6">
-                <div class="text-sm-end d-none d-sm-block">
+            <div className="col-sm-6">
+                <div className="text-sm-end d-none d-sm-block">
                    {date} Design & Develop by Shashank Sharma
                 </div>
             </div>

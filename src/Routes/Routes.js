@@ -17,9 +17,6 @@ const Dashboard = loadable(() => import("../pages/Dashboard"), {
   const Sales = loadable(() => import("../pages/Sales"), {
     fallback: <Loader />,
   });
-  const ForgotPassword = loadable(() => import("../pages/ForgotPassword"), {
-    fallback: <Loader />,
-  });
 const PrivateRoutes=() => {
     return (
         <>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {  NavLink } from 'react-router-dom';
 import { sideBarData } from '../helper/sideBarData';
 
@@ -10,7 +10,6 @@ const Sidebar = () => {
                     <div id="sidebar-menu">
                         <ul className="metismenu list-unstyled" id="side-menu">
                              {sideBarData.map((item)=>{
-                                console.log(item);
                                 return (
                                     <li key={item.name.toString()}>
                                     <NavLink to={item.path} className="has-arrow waves-effect">

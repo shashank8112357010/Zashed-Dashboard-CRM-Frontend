@@ -13,7 +13,6 @@ const Header = ({
   sideBarToggle,
 
 }) => {
-  const [noti, setnoti] = useState(false);
   const [profile, setprofile] = useState(false);
   const navigate = useNavigate();
 
@@ -41,14 +40,14 @@ const Header = ({
                   <img src={Logo} alt="Logo" height="40" width="50" />
                 </span>
               </Link>
-              <a href="#" className="logo logo-light">
+              <span className="logo logo-light">
                 <span className="logo-sm">
                   <img src="images/logo-light.svg" alt="Logo" height="22" />
                 </span>
                 <span className="logo-lg">
                   <img src="images/logo-light.png" alt="Logo" height="19" />
                 </span>
-              </a>
+              </span>
             </div>
             <button type="button" onClick={handleSideBarToggle} className="btn btn-sm px-3 font-size-16 header-item waves-effect" id="vertical-menu-btn">
               <i className="fa fa-fw fa-bars"></i>
@@ -64,10 +63,9 @@ const Header = ({
                 <i className="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
               </button>
               <div className={profile ? "dropdown-menu dropdown-menu-end show drop-showing" : "dropdown-menu dropdown-menu-end"}>
-                <a className="dropdown-item" href="#"><i className="bx bx-user font-size-16 align-middle me-1"></i> <span key="t-profile">Profile</span></a>
-                <a className="dropdown-item" href="#"><i className="bx bx-wallet font-size-16 align-middle me-1"></i> <span key="t-my-wallet">My Wallet</span></a>
-                <a className="dropdown-item d-block" href="#"><span className="badge bg-success float-end">11</span><i className="bx bx-wrench font-size-16 align-middle me-1"></i> <span key="t-settings">Settings</span></a>
-                <a className="dropdown-item" href="#"><i className="bx bx-lock-open font-size-16 align-middle me-1"></i> <span key="t-lock-screen">Lock screen</span></a>
+                <label className="dropdown-item" href="#"><i className="bx bx-user font-size-16 align-middle me-1"></i> <span key="t-profile">Profile</span></label>
+                <label className="dropdown-item d-block" href="#"><span className="badge bg-success float-end">11</span><i className="bx bx-wrench font-size-16 align-middle me-1"></i> <span key="t-settings">Settings</span></label>
+                <label className="dropdown-item" href="#"><i className="bx bx-lock-open font-size-16 align-middle me-1"></i> <span key="t-lock-screen">Lock screen</span></label>
                 <div className="dropdown-divider"></div>
                 <button className='dropdown-item text-danger' type='button' onClick={LogOut}><i className="bx bx-power-off font-size-16 align-middle me-1 text-danger"></i> <span key="t-logout">Logout</span></button>
               </div>

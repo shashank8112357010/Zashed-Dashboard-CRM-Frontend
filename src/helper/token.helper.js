@@ -4,7 +4,6 @@ export const getToken = () => {
   } 
   // set token to local storage
   export const setToken = (token) => {
-    console.log(token);
     localStorage.setItem('token',token );
   }
   // remove token from local storage

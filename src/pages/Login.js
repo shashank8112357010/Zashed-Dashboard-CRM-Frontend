@@ -1,11 +1,8 @@
 import React, { useState } from "react";
-import { Link, Route, Routes, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { setToken } from "../helper/token.helper";
 import Toast from "../common/Toast";
 import { login } from "../services/services";
-import ForgotPassword from "./ForgotPassword";
-
-
 const Login = () => {
     const [preview, setpreview] = useState(false);
     const [credentials, setCredentials] = useState({
@@ -13,7 +10,6 @@ const Login = () => {
         password: null
     });
     const navigate = useNavigate();
-
     const handleSubmit = () => {
         if (!credentials.username) {
             Toast(true, 'please enter username')
@@ -29,10 +25,7 @@ const Login = () => {
                 }
 
             }).catch((err) => {
-                console.log(err);
                 Toast(true, err.response.data.message);
-
-
             })
 
 
