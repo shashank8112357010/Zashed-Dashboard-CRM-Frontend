@@ -33,8 +33,6 @@ const ForgotPassword = () => {
             setLoding(false);
 
         })
-
-
     }
 
     const resetPassword = (e) => {
