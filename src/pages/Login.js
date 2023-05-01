@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { setToken } from "../helper/token.helper";
+import { setToken, setUserName, setUserRole } from "../helper/token.helper";
 import Toast from "../common/Toast";
 import { login } from "../services/services";
 const Login = () => {
@@ -16,21 +16,18 @@ const Login = () => {
         } else if (!credentials.password) {
             Toast(true, 'Please enter password');
         } else if (credentials.username && credentials.password) {
-
             login(credentials).then((res) => {
                 if (res) {
+                    setUserRole(res?.data?.results?.UserRoles[0]?.Role?.name);
+                    setUserName(res?.data?.results?.username.toUpperCase())
                     Toast(false, res?.data?.message);
                     setToken(res?.data?.results?.token);
                     navigate('/dashboard')
                 }
-
             }).catch((err) => {
                 Toast(true, err.response.data.message);
             })
-
-
         }
-
     }
     return (
         <div>

@@ -1,8 +1,7 @@
 import { toast } from 'react-toastify';
 
 const Toast = (isError, message) => {
-    
-      const option = { timeOut: 5000 };
+      const option = { timeOut: 500 };
       if (isError) {
         toast.error(message, option);
         return;

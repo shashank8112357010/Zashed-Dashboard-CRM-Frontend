@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { clearStorage, removeToken } from '../helper/token.helper';
+import { clearStorage, getUserName, removeToken } from '../helper/token.helper';
 import { useNavigate } from 'react-router-dom';
 import Toast from "../common/Toast";
 import Logo from "../assets/images/zashedlogo.png"
@@ -15,6 +15,7 @@ const Header = ({
 }) => {
   const [profile, setprofile] = useState(false);
   const navigate = useNavigate();
+  const userName = getUserName()
 
 
   const LogOut = () => {
@@ -59,7 +60,7 @@ const Header = ({
                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <img className="rounded-circle header-profile-user" src={Avatar}
                   alt="Header Avatar" />
-                <span className="d-none d-xl-inline-block ms-1" key="t-henry">Henry</span>
+                <span className="d-none d-xl-inline-block ms-1" key="t-henry">{userName}</span>
                 <i className="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
               </button>
               <div className={profile ? "dropdown-menu dropdown-menu-end show drop-showing" : "dropdown-menu dropdown-menu-end"}>

@@ -14,3 +14,34 @@ export const getToken = () => {
   export const clearStorage = () => {
     localStorage.clear();
   }
+
+
+
+  // roles token getter setter 
+
+  export const getUserRole = () => {
+    return localStorage.getItem('userRole');
+  } 
+  // set token to local storage
+  export const setUserRole = (userRole) => {
+    localStorage.setItem('userRole',userRole );
+  }
+  // remove token from local storage
+  export const removeUserRole = () => {
+    localStorage.removeItem('user');
+  }
+
+  // user name getter setter 
+
+
+  export const getUserName = () => {
+    return localStorage.getItem('userName');
+  } 
+  // set token to local storage
+  export const setUserName = (userName) => {
+    localStorage.setItem('userName',userName );
+  }
+  // remove token from local storage
+  export const removeUserName = () => {
+    localStorage.removeItem('userName');
+  }

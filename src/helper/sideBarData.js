@@ -3,7 +3,7 @@ export const sideBarData =[
         name:'Dashboard',
         path:'/dashboard',
         icon:'bx bx-home-circle'
-    },
+    }, 
     {
         name:'Sales',
         path:'/sales',
