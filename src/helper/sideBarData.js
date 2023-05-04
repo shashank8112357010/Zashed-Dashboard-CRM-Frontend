@@ -19,6 +19,4 @@ export const sideBarData =[
         path:'/ticket',
         icon:'bx bx-purchase-tag-alt'
     }
-
-
 ]
