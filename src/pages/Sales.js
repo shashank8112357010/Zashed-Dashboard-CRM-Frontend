@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import Chart from "react-apexcharts";
 import "./pages.css"
+import { getBrands, getSalesCommission } from '../services/services';
 const Sales = () => {
-    const [choosebrand , setChooseBrand] = useState(false)
+    const [BrandSelectHeading , setBrandSelectHeading] = useState('Choose Brands');
+    const [commissionData , setCommissionData] = useState();
 
+    const [brands , setBrands] = useState([])
+    const [choosebrand, setChooseBrand] = useState(false)
     const [barChart, setbarChart] = useState({
         options: {
             chart: {
@@ -38,7 +42,6 @@ const Sales = () => {
             }
         ]
     })
-
     const [pieChart, setPieChart] = useState({
         options: {
             chart: {
@@ -60,7 +63,6 @@ const Sales = () => {
         labels: ['A', 'B', 'C', 'D', 'E']
 
     })
-
     const [lineChart, setLineChart] = useState({
 
         series: [{
@@ -96,6 +98,30 @@ const Sales = () => {
             }
         }
     })
+
+    const getAllBrands = () => {
+        getBrands().then((res) => {
+            console.log(res?.data?.results);
+            setBrands(res?.data?.results)
+        }).catch((err) => {
+            console.log(err);
+        })
+    }
+
+     const getAllCommissionData =()=>{
+        getSalesCommission().then((res)=>{
+            console.log(res);
+        }).catch((err)=>{
+            console.log(err);
+        })
+     }
+
+    useEffect(()=>{
+        getAllBrands();
+        getAllCommissionData()
+    },[])
+
+
     return (
         <div className="main-content">
             <div className="page-content">
@@ -105,16 +131,19 @@ const Sales = () => {
                             <div className="page-title-box d-flex align-items-center justify-content-between">
                                 <h2 className="mb-sm-0 font-size-20">Sales</h2>
                                 <div className="dropdown">
-                                    <button className="btn btn-secondary dropdown-toggle" onClick={()=>setChooseBrand(!choosebrand)} href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Choose Brand
+                                    <button className="btn btn-secondary dropdown-toggle p-2" style={{minWidth:"120px"}} onClick={() => setChooseBrand(!choosebrand)} href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                        {BrandSelectHeading}
                                     </button>
-                                    <ul className={`dropdown-menu  ${ choosebrand && 'show' }`} aria-labelledby="dropdownMenuLink">
-                                        <li><a className="dropdown-item" href="#">Brand 1</a></li>
-                                        <li><a className="dropdown-item" href="#">Brand 2</a></li>
-                                        <li><a className="dropdown-item" href="#">brand 3</a></li>
-                                        <li><a className="dropdown-item" href="#">brand 4</a></li>
-                                        <li><a className="dropdown-item" href="#">brand 5</a></li>
-                         
+                                    <ul className={`dropdown-menu  ${choosebrand && 'show'}`} aria-labelledby="dropdownMenuLink">
+                                        {
+                                            brands && brands.map((item)=>{
+                                                return(
+                                                    <li key={item.name.toString()} className='dropdown-item cursor-pointer' onClick={()=>{setBrandSelectHeading(item.name) ; setChooseBrand(false)}}>{item.name}</li>
+                                                )
+                                            })
+                                        }
+
+                                        
                                     </ul>
                                 </div>
                             </div>
@@ -188,7 +217,7 @@ const Sales = () => {
                                         options={barChart?.options}
                                         series={barChart?.series}
                                         type="bar"
-                                        />
+                                    />
                                 </div>
                             </div>
                         </div>

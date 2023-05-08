@@ -1,14 +1,39 @@
 import axios from "axios";
-let backendapi= 'http://localhost:8080/api/user'
+import { getToken } from "../helper/token.helper";
+let backendapi = 'http://localhost:8080/api';
 
-export const login =  async(body) => {
-    return await axios.post(`${backendapi}/login` , body);
-  };
 
-  export const validateOTP = async(body)=>{
-    return await axios.post(`${backendapi}/generateOtp` , body)
+const config = {
+  headers: {
+    'Authorization': `Bearer ${getToken()}`,
   }
+};
 
-  export const changePassword = async(body)=>{
-    return await axios.post(`${backendapi}/resetPassword` , body)
-  }
+export const login = async (body) => {
+  return await axios.post(`${backendapi}/user/login`, body);
+};
+
+export const validateOTP = async (body) => {
+  return await axios.post(`${backendapi}/user/generateOtp`, body)
+}
+
+
+export const changePassword = async (body) => {
+  return await axios.post(`${backendapi}/user/resetPassword`, body)
+}
+
+export const createBrand = async (body) => {
+  return await axios.post(`${backendapi}/brand/createBrand`, body, config)
+}
+
+export const getBrands = async () => {
+  return await axios.get(`${backendapi}/brand/listBrands`, config)
+}
+
+export const getSalesCommission = async () => {
+  return await axios.post(`${backendapi}/sales/totalCommission`, config)
+}
+
+export const getSalesRevenue = async () => {
+  return await axios.post(`${backendapi}/sales/totalRevenue`, config)
+}
