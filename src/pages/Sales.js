@@ -2,126 +2,45 @@ import React, { useEffect, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import Chart from "react-apexcharts";
 import "./pages.css"
-import { getBrands, getSalesCommission } from '../services/services';
+import { getBrands, getSalesCommission, getSalesRevenue } from '../services/services';
+import { brandPerfomance, brandPerfomanceQuantity, monthOnmonth, revenueCompositionByBrands, zashedCommissionComposition } from '../GraphData/allGraph';
 const Sales = () => {
-    const [BrandSelectHeading , setBrandSelectHeading] = useState('Choose Brands');
-    const [commissionData , setCommissionData] = useState();
-
-    const [brands , setBrands] = useState([])
-    const [choosebrand, setChooseBrand] = useState(false)
-    const [barChart, setbarChart] = useState({
-        options: {
-            chart: {
-                id: "basic-bar"
-            },
-            responsive: [{
-                breakpoint: 480,
-                options: {
-                    chart: {
-                        width: 300
-                    },
-                    legend: {
-                        position: 'bottom'
-                    }
-                }
-            }],
-            xaxis: {
-                categories: ["Brand 1", "Brand 2", "Brand 3", "Brand 4", "Brand 5", "Brand 6", "Brand 7", "Brand 8"]
-            },
-            grid: {
-                row: {
-                    colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
-                    opacity: 0.5
-                },
-            },
-        },
-        series: [
-            {
-                name: "series-1",
-                data: [30, 40, 45, 50, 49, 60, 70, 91]
-            }
-        ]
-    })
-    const [pieChart, setPieChart] = useState({
-        options: {
-            chart: {
-                type: 'donut',
-            },
-            responsive: [{
-                breakpoint: 480,
-                options: {
-                    chart: {
-                        width: 310
-                    },
-                    legend: {
-                        position: 'left'
-                    }
-                }
-            }]
-        },
-        series: [44, 55, 41, 17, 15],
-        labels: ['A', 'B', 'C', 'D', 'E']
-
-    })
-    const [lineChart, setLineChart] = useState({
-
-        series: [{
-            name: "Desktops",
-            data: [10, 41, 35, 51, 49, 62, 69, 91, 148]
-        }],
-        options: {
-            chart: {
-                height: 350,
-                type: 'line',
-                zoom: {
-                    enabled: false
-                }
-            },
-            dataLabels: {
-                enabled: true
-            },
-            stroke: {
-                curve: 'straight'
-            },
-            title: {
-                text: 'Product Trends by Month',
-                align: 'left'
-            },
-            grid: {
-                row: {
-                    colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
-                    opacity: 0.5
-                },
-            },
-            xaxis: {
-                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
-            }
-        }
-    })
-
+    const [BrandSelectHeading, setBrandSelectHeading] = useState('Choose Brands');
+    const [totalCommission, settotalCommission] = useState('')
+    const [totalRevinew, settotalRevinew] = useState('');
+    const [brands, setBrands] = useState([]);
+    const [choosebrand, setChooseBrand] = useState(false);
+    const [performanceQuantity, setDataa] = useState(brandPerfomanceQuantity())
+    const [zashedCommissionCompositionData, setzashedCommissionComposition] = useState(zashedCommissionComposition())
+    const [revenueCompositionByBrandsData, setPieChartRevenueCompositionByBrandsData] = useState(revenueCompositionByBrands())
+    const [lineChart, setLineChart] = useState(monthOnmonth())
+    const [performanceRevenue, setData] = useState(brandPerfomance())
     const getAllBrands = () => {
         getBrands().then((res) => {
-            console.log(res?.data?.results);
             setBrands(res?.data?.results)
         }).catch((err) => {
             console.log(err);
         })
     }
-
-     const getAllCommissionData =()=>{
-        getSalesCommission().then((res)=>{
-            console.log(res);
-        }).catch((err)=>{
+    const getAllCommissionData = () => {
+        getSalesCommission().then((res) => {
+            settotalCommission(res.data.results.totalCommission)
+        }).catch((err) => {
             console.log(err);
         })
-     }
-
-    useEffect(()=>{
+    }
+    const getAllRevinew = () => {
+        getSalesRevenue().then((res) => {
+            settotalRevinew(res.data.results)
+        }).catch((err) => {
+            console.log(err);
+        })
+    }
+    useEffect(() => {
         getAllBrands();
-        getAllCommissionData()
-    },[])
-
-
+        getAllCommissionData();
+        getAllRevinew();
+    }, [])
     return (
         <div className="main-content">
             <div className="page-content">
@@ -131,19 +50,17 @@ const Sales = () => {
                             <div className="page-title-box d-flex align-items-center justify-content-between">
                                 <h2 className="mb-sm-0 font-size-20">Sales</h2>
                                 <div className="dropdown">
-                                    <button className="btn btn-secondary dropdown-toggle p-2" style={{minWidth:"120px"}} onClick={() => setChooseBrand(!choosebrand)} href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <button className="btn btn-secondary dropdown-toggle p-2" style={{ minWidth: "120px" }} onClick={() => setChooseBrand(!choosebrand)} href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                                         {BrandSelectHeading}
                                     </button>
                                     <ul className={`dropdown-menu  ${choosebrand && 'show'}`} aria-labelledby="dropdownMenuLink">
                                         {
-                                            brands && brands.map((item)=>{
-                                                return(
-                                                    <li key={item.name.toString()} className='dropdown-item cursor-pointer' onClick={()=>{setBrandSelectHeading(item.name) ; setChooseBrand(false)}}>{item.name}</li>
+                                            brands && brands.map((item) => {
+                                                return (
+                                                    <li key={item.name.toString()} className='dropdown-item cursor-pointer' onClick={() => { setBrandSelectHeading(item.name); setChooseBrand(false) }}>{item.name}</li>
                                                 )
                                             })
                                         }
-
-                                        
                                     </ul>
                                 </div>
                             </div>
@@ -156,7 +73,7 @@ const Sales = () => {
                                     <div className="d-flex">
                                         <div className="flex-grow-1">
                                             <p className="text-muted fw-medium">Total Revenue</p>
-                                            <h4 className="mb-3">$35, 723</h4>
+                                            <h4 className="mb-3">{totalRevinew?.totalRevenue}</h4>
                                         </div>
                                         <div className="flex-shrink-0 align-self-center ">
                                             <div className="avatar-sm rounded-circle bg-primary mini-stat-icon">
@@ -173,7 +90,7 @@ const Sales = () => {
                                     <div className="d-flex">
                                         <div className="flex-grow-1">
                                             <p className="text-muted fs-16 fw-medium">Total Commission</p>
-                                            <h4 className="mb-2">$35, 723</h4>
+                                            <h4 className="mb-2">{totalCommission}</h4>
                                         </div>
                                         <div className="flex-shrink-0 align-self-center ">
                                             <div className="avatar-sm rounded-circle bg-primary mini-stat-icon">
@@ -191,11 +108,10 @@ const Sales = () => {
                                 <div className="card-body">
                                     <h4 className="card-title mb-4">Brand Perfomance</h4>
                                     <Chart
-                                        options={barChart?.options}
-                                        series={barChart?.series}
+                                        options={performanceRevenue?.options}
+                                        series={performanceRevenue?.series}
                                         type="bar"
                                     />
-
                                 </div>
                             </div>
                         </div>
@@ -205,7 +121,7 @@ const Sales = () => {
                             <h4>Revenue Composition By Brands</h4>
                             <div className="card">
                                 <div className="card-body">
-                                    <Chart options={pieChart?.options} series={pieChart?.series} type="donut" />
+                                    <Chart options={revenueCompositionByBrandsData?.options} series={revenueCompositionByBrandsData?.series} type="donut" />
                                 </div>
                             </div>
                         </div>
@@ -214,8 +130,8 @@ const Sales = () => {
                             <div className="card">
                                 <div className="card-body">
                                     <Chart
-                                        options={barChart?.options}
-                                        series={barChart?.series}
+                                        options={performanceQuantity?.options}
+                                        series={performanceQuantity?.series}
                                         type="bar"
                                     />
                                 </div>
@@ -224,15 +140,15 @@ const Sales = () => {
                     </div>
 
                     <div className='row'>
-                        <div className='col-lg-6 col-sm-12'>
+                        <div className='col-lg-5 col-sm-12'>
                             <h4>Zashed commission composition</h4>
                             <div className="card">
                                 <div className="card-body">
-                                    <Chart options={pieChart?.options} series={pieChart?.series} type="donut" />
+                                    <Chart options={zashedCommissionCompositionData?.options} series={zashedCommissionCompositionData?.series} type="donut" />
                                 </div>
                             </div>
                         </div>
-                        <div className='col-lg-6 col-sm-12'>
+                        <div className='col-lg-7 col-sm-12'>
                             <h4>Month on Month</h4>
                             <div className="card">
                                 <div className="card-body">

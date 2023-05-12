@@ -64,7 +64,7 @@ const Header = ({
                 <i className="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
               </button>
               <div className={profile ? "dropdown-menu dropdown-menu-end show drop-showing" : "dropdown-menu dropdown-menu-end"}>
-                <label className="dropdown-item cursor-pointer" href="#"><i className="bx bx-upload font-size-16 align-middle me-1"></i> <span key="t-profile">Upload Brand</span></label>
+                <label className="dropdown-item cursor-pointer" ><i className="bx bx-upload font-size-16 align-middle me-1"></i> <span key="t-profile"><Link to="/uploadbrands" onClick={()=>setprofile(false)}>Upload Brand</Link></span></label>
                 {/* <label className="dropdown-item d-block" href="#"><span className="badge bg-success float-end">11</span><i className="bx bx-wrench font-size-16 align-middle me-1"></i> <span key="t-settings">Settings</span></label>
                 <label className="dropdown-item" href="#"><i className="bx bx-lock-open font-size-16 align-middle me-1"></i> <span key="t-lock-screen">Lock screen</span></label> */}
                 <div className="dropdown-divider"></div>

@@ -7,6 +7,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { getToken } from './helper/token.helper';
 import ForgotPassword from './pages/ForgotPassword';
+import { calculatebrandPerfomance } from './GraphData/allGraph';
 // Login module routes check over here
 const App = () => {
   const location = useLocation();
@@ -20,6 +21,7 @@ const App = () => {
       navigate("/login");
     }
   }, []);
+
   const gotoLogin = () => {
     return (
       <Routes>
@@ -29,7 +31,9 @@ const App = () => {
     );
   };
 
-
+  useEffect(()=>{
+    calculatebrandPerfomance()
+  },[])
 
   return (
     <Fragment>
@@ -38,11 +42,10 @@ const App = () => {
         location.pathname === "" ||
           location.pathname === "/login" ||
           location.pathname === "/forgotpassword" ||
-
           location.pathname === "/" ? (
           gotoLogin()
         ) :
-          <Wrapper />
+          <Wrapper/>
       }
     </Fragment>
   );

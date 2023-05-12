@@ -22,7 +22,6 @@ const ForgotPassword = () => {
             "email": email
         }).then((res) => {
             if (res) {
-                console.log(res);
                 Toast(false, "OTP send successfully")
                 setChangePassScreen(true);
                 setLoding(false);
@@ -36,18 +35,15 @@ const ForgotPassword = () => {
     }
 
     const resetPassword = (e) => {
-        console.log("inside ");
         changePassword({ 
             ...chnagePasswordData ,
             email:email
         }).then((res)=>{
-            console.log();
             if(res){
             Toast(false , res.data.message)
                 navigate("/login")
             }
         }).catch((err)=>{
-            console.log(err);
             Toast(true , err.response.data.message)
         })
 

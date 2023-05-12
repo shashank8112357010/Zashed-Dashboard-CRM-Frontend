@@ -9,6 +9,10 @@ const config = {
   }
 };
 
+export const getClientUser = async () => {
+  return await axios.get(`${backendapi}/user/getClients`,config);
+};
+
 export const login = async (body) => {
   return await axios.post(`${backendapi}/user/login`, body);
 };
@@ -31,9 +35,13 @@ export const getBrands = async () => {
 }
 
 export const getSalesCommission = async () => {
-  return await axios.post(`${backendapi}/sales/totalCommission`, config)
+  return await axios.post(`${backendapi}/sales/totalCommission`,{} ,config)
 }
 
 export const getSalesRevenue = async () => {
-  return await axios.post(`${backendapi}/sales/totalRevenue`, config)
+  return await axios.post(`${backendapi}/sales/totalRevenue`,{}, config)
+}
+
+export const getSalesMonthOnMonth = async () => {
+  return await axios.post(`${backendapi}/sales/monthlyRevenue`,{}, config)
 }
