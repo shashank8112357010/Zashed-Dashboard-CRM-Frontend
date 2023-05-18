@@ -45,3 +45,10 @@ export const getToken = () => {
   export const removeUserName = () => {
     localStorage.removeItem('userName');
   }
+
+  export const setTermsAndCondition =(aggreed)=>{
+    localStorage.setItem('isAggreed' , aggreed )
+  }
+  export const getTermsAndCondition =()=>{
+    return localStorage.getItem('isAggreed')
+  }

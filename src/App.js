@@ -5,9 +5,10 @@ import Wrapper from './layouts/Wrapper';
 import { ToastContainer } from 'react-toastify';
 // Toaster css 
 import 'react-toastify/dist/ReactToastify.css';
-import { getToken } from './helper/token.helper';
+import { getTermsAndCondition, getToken } from './helper/token.helper';
 import ForgotPassword from './pages/ForgotPassword';
 import { calculatebrandPerfomance } from './GraphData/allGraph';
+import Toast from './common/Toast';
 // Login module routes check over here
 const App = () => {
   const location = useLocation();
@@ -17,9 +18,12 @@ const App = () => {
     // checking while component is being mounted weather it is auth check or not
     if (location.pathname === "" || location.pathname === "/") {
       navigate("/login");
-    } else if (!getToken()) {
+    } 
+    else if(!getTermsAndCondition()){
       navigate("/login");
-    }
+    }else if (!getToken()) {
+      navigate("/login");
+    } 
   }, []);
 
   const gotoLogin = () => {

@@ -16,6 +16,9 @@ export const getClientUser = async () => {
 export const login = async (body) => {
   return await axios.post(`${backendapi}/user/login`, body);
 };
+export const terms_Condition = async ( body) => {
+  return await axios.put(`${backendapi}/user/acceptTNC`, body ,config);
+};
 
 export const validateOTP = async (body) => {
   return await axios.post(`${backendapi}/user/generateOtp`, body)

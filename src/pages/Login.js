@@ -1,9 +1,14 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { setToken, setUserName, setUserRole } from "../helper/token.helper";
+import { Link, Route, Routes, useNavigate } from "react-router-dom";
+import { setTermsAndCondition, setToken, setUserName, setUserRole } from "../helper/token.helper";
 import Toast from "../common/Toast";
-import { login } from "../services/services";
+import { login, terms_Condition } from "../services/services";
+import { Button, Modal } from "react-bootstrap";
 const Login = () => {
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+    const [acceptTerms , setTerms] = useState(false)
     const [preview, setpreview] = useState(false);
     const [credentials, setCredentials] = useState({
         username: null,
@@ -20,15 +25,44 @@ const Login = () => {
                 if (res) {
                     setUserRole(res?.data?.results?.UserRoles[0]?.Role?.name);
                     setUserName(res?.data?.results?.username.toUpperCase())
-                    Toast(false, res?.data?.message);
                     setToken(res?.data?.results?.token);
-                    navigate('/dashboard')
+                    setTermsAndCondition(res?.data?.results?.terms_n_conditions)
+                    if (res?.data?.results?.terms_n_conditions === true) {
+                        Toast(false, res?.data?.message);
+                        navigate('/dashboard');
+                    } else {
+                        handleShow()
+                    }
                 }
             }).catch((err) => {
                 Toast(true, err.response.data.message);
             })
         }
     }
+
+    const handleAcceptTerms = () => {
+        if(acceptTerms){
+            terms_Condition(
+                {
+                    "terms_n_conditions": acceptTerms
+                }
+            ).then((res) => {
+                if(res)
+               if(res){
+                Toast(false , 'Logged in Successfully')
+                navigate('/dashboard')
+               }
+            }).catch((err) => {
+                console.log(err);
+            })
+        }else{
+            Toast(true , "Please Accept terms to access dashboard")
+        }
+       
+    }
+
+
+
     return (
         <div>
             <div className="container-fluid p-0">
@@ -103,7 +137,7 @@ const Login = () => {
                                                 </div>
 
                                                 <div className="mb-3">
-                                                    <div className="float-end"> 
+                                                    <div className="float-end">
                                                         <Link className="text-muted" to="/forgotpassword" >Forgot password?</Link>
                                                     </div>
                                                     <label className="form-label">Password</label>
@@ -141,9 +175,49 @@ const Login = () => {
                     </div>
                 </div>
             </div>
+
+            {/* terma and condition  */}
+            <Modal
+                show={show}
+                onHide={handleClose}
+                backdrop="static"
+                keyboard={false}
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>T&C for sales dashboard usage</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p>
+                        These terms and conditions govern your use of the Seller Dashboard, which is owned and operated by Zashed Fashiontech Pvt. Ltd. By accessing or using the Seller Dashboard, you agree to be bound by these Terms.
+                        Use of the Dashboard: The User is authorized to use the Dashboard to view sales data and other related information for the purpose of conducting business with the owner of the Dashboard. You may not use the Seller Dashboard to engage in any activity that is illegal, fraudulent, or in violation of our policies.
+                        Confidentiality and security: The User acknowledges and agrees that all information displayed on the Dashboard is confidential and proprietary to the owner. The User agrees to maintain the confidentiality of the information displayed on the Dashboard and not to disclose it to any third party. You are responsible for maintaining the security of your account and any actions taken through your account.
+                        Intellectual Property: The User acknowledges that the Dashboard and all related materials, including but not limited to software, data, and trademarks, are the property of the owner of the Dashboard and are protected by intellectual property laws. The User may not modify, reproduce, distribute, or create derivative works based on the Dashboard without the owner's prior written consent.
+                        Limitation of Liability: The User acknowledges and agrees that the owner of the Dashboard shall not be liable for any direct, indirect, incidental, special, consequential, or exemplary damages, including but not limited to damages for loss of profits, goodwill, use, data, or other intangible losses resulting from the use or inability to use the Dashboard.
+                        Termination: The owner of the Dashboard reserves the right to terminate the User's access to the Dashboard at any time and for any reason, without notice.
+                        Governing Law: This Agreement shall be governed by and construed in accordance with the laws of the jurisdiction in which the owner of the Dashboard is located, without giving effect to any principles of conflicts of law.
+                        By using the Dashboard, the User acknowledges and agrees to all of the terms and conditions set forth in this Agreement. If the User does not agree to these terms and conditions, the User should not use the Dashboard.
+                    </p>
+                    <div className="row">
+                        <div className="col-1">
+                            <input type="checkbox" onChange={(e)=>setTerms(e.target.checked)} />
+                        </div>
+                        <div className="col-11">
+                            <p>I agree to all the Terms & Condition</p>
+                        </div>
+                    </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                        Close
+                    </Button>
+                    <Button variant="primary" onClick={handleAcceptTerms}>Save</Button>
+                </Modal.Footer>
+            </Modal>
         </div>
 
 
     )
 };
 export default Login;
+
+
