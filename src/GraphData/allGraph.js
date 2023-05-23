@@ -1,4 +1,5 @@
 import { getSalesCommission, getSalesMonthOnMonth, getSalesRevenue } from "../services/services"
+
 const initialData = {
     xaxis: [],
     brandPerformanceseries: [{
@@ -11,17 +12,16 @@ const initialData = {
     }],
     zashedCommissionCompositionSeries: [],
     compositionByBrandsSeries: [],
-    monthOnMonthData :{
-        data:[],
-        xaxis:[]
+    monthOnMonthData: {
+        data: [],
+        xaxis: []
 
     }
 }
-
-
 export const calculatebrandPerfomance = () => {
     // revenue
     getSalesRevenue().then((res) => {
+        console.log(res);
         initialData.brandPerformanceseries[0].data = (res?.data?.results?.brandDetails.map((item) => item.totalRevenue))
         initialData.brandPerformanceQuantitySeries[0].data = (res?.data?.results?.brandDetails.map((item) => item.totalSales))
         initialData.xaxis = res?.data?.results?.brandDetails?.map((item) => item.brand_name);
@@ -39,16 +39,14 @@ export const calculatebrandPerfomance = () => {
         console.log(err);
     })
     // month wise data
-    getSalesMonthOnMonth().then((res)=>{
+    getSalesMonthOnMonth().then((res) => {
         console.log(res);
-
-    }).catch((err)=>{
+    }).catch((err) => {
         console.log(err);
     })
 }
 
 export const brandPerfomance = () => {
-
     return {
         options: {
             chart: {
@@ -79,7 +77,6 @@ export const brandPerfomance = () => {
     }
 
 }
-
 export const brandPerfomanceQuantity = () => {
 
     return {
@@ -129,7 +126,7 @@ export const zashedCommissionComposition = () => {
                     }
                 }
             }],
-            labels:initialData?.xaxis
+            labels: initialData?.xaxis
         },
         series: initialData.zashedCommissionCompositionSeries,
     }
@@ -137,7 +134,7 @@ export const zashedCommissionComposition = () => {
 export const revenueCompositionByBrands = () => {
     return {
         options: {
-        
+
             responsive: [{
                 breakpoint: 480,
                 options: {
@@ -149,14 +146,13 @@ export const revenueCompositionByBrands = () => {
                     }
                 }
             }],
-            labels:initialData?.xaxis
+            labels: initialData?.xaxis
         },
         series: initialData.compositionByBrandsSeries,
-       
+
     }
 }
-
-export const monthOnmonth = ()=>{
+export const monthOnmonth = () => {
     return {
         series: [{
             name: "Adidas",
@@ -196,6 +192,7 @@ export const monthOnmonth = ()=>{
         }
     }
 }
+
 
 
 

@@ -6,15 +6,15 @@ import { getBrands, getSalesCommission, getSalesRevenue } from '../services/serv
 import { brandPerfomance, brandPerfomanceQuantity, monthOnmonth, revenueCompositionByBrands, zashedCommissionComposition } from '../GraphData/allGraph';
 const Sales = () => {
     const [BrandSelectHeading, setBrandSelectHeading] = useState('Choose Brands');
-    const [totalCommission, settotalCommission] = useState('')
+    const [totalCommission, settotalCommission] = useState('');
     const [totalRevinew, settotalRevinew] = useState('');
     const [brands, setBrands] = useState([]);
     const [choosebrand, setChooseBrand] = useState(false);
-    const [performanceQuantity, setDataa] = useState(brandPerfomanceQuantity())
-    const [zashedCommissionCompositionData, setzashedCommissionComposition] = useState(zashedCommissionComposition())
-    const [revenueCompositionByBrandsData, setPieChartRevenueCompositionByBrandsData] = useState(revenueCompositionByBrands())
-    const [lineChart, setLineChart] = useState(monthOnmonth())
-    const [performanceRevenue, setData] = useState(brandPerfomance())
+    const [performanceQuantity, setDataa] = useState(brandPerfomanceQuantity());
+    const [zashedCommissionCompositionData, setzashedCommissionComposition] = useState(zashedCommissionComposition());
+    const [revenueCompositionByBrandsData, setPieChartRevenueCompositionByBrandsData] = useState(revenueCompositionByBrands());
+    const [lineChart, setLineChart] = useState(monthOnmonth());
+    const [performanceRevenue, setData] = useState(brandPerfomance());
     const getAllBrands = () => {
         getBrands().then((res) => {
             setBrands(res?.data?.results)
@@ -27,6 +27,7 @@ const Sales = () => {
             settotalCommission(res.data.results.totalCommission)
         }).catch((err) => {
             console.log(err);
+            console.log((err)=>({name:err.Chart}))
         })
     }
     const getAllRevinew = () => {
@@ -40,7 +41,7 @@ const Sales = () => {
         getAllBrands();
         getAllCommissionData();
         getAllRevinew();
-    }, [])
+    }, []);
     return (
         <div className="main-content">
             <div className="page-content">
@@ -120,6 +121,7 @@ const Sales = () => {
                         <div className='col-lg-5 col-sm-12'>
                             <h4>Revenue Composition By Brands</h4>
                             <div className="card">
+
                                 <div className="card-body">
                                     <Chart options={revenueCompositionByBrandsData?.options} series={revenueCompositionByBrandsData?.series} type="donut" />
                                 </div>
@@ -138,13 +140,12 @@ const Sales = () => {
                             </div>
                         </div>
                     </div>
-
                     <div className='row'>
                         <div className='col-lg-5 col-sm-12'>
                             <h4>Zashed commission composition</h4>
                             <div className="card">
                                 <div className="card-body">
-                                    <Chart options={zashedCommissionCompositionData?.options} series={zashedCommissionCompositionData?.series} type="donut" />
+                                    <Chart options={zashedCommissionCompositionData?.options} series={zashedCommissionCompositionData?.series} type="donut"/>
                                 </div>
                             </div>
                         </div>
@@ -158,10 +159,8 @@ const Sales = () => {
                         </div>
                     </div>
                 </div>
-                {/* <!-- container-fluid --> */}
             </div>
         </div>
     )
 }
-
-export default Sales
+export default Sales;

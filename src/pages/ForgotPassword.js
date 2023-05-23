@@ -4,7 +4,6 @@ import { Link  , useNavigate} from 'react-router-dom'
 import { validateOTP ,changePassword } from '../services/services';
 import Toast from "../common/Toast"
 
-
 const ForgotPassword = () => {
     const [email, setEmail] = useState();
     const [chnagePasswordData , setChangePasswordData] = useState({
@@ -49,7 +48,6 @@ const ForgotPassword = () => {
 
     }
     return (
-
         <div>
             <div className="container-fluid p-0">
                 <div className="row g-0">

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, Route, Routes, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { setTermsAndCondition, setToken, setUserName, setUserRole } from "../helper/token.helper";
 import Toast from "../common/Toast";
 import { login, terms_Condition } from "../services/services";
@@ -8,12 +8,13 @@ const Login = () => {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-    const [acceptTerms , setTerms] = useState(false)
+    const [acceptTerms, setTerms] = useState(false)
     const [preview, setpreview] = useState(false);
     const [credentials, setCredentials] = useState({
         username: null,
         password: null
     });
+    const [token , setUserToken] = useState(null)
     const navigate = useNavigate();
     const handleSubmit = () => {
         if (!credentials.username) {
@@ -23,11 +24,13 @@ const Login = () => {
         } else if (credentials.username && credentials.password) {
             login(credentials).then((res) => {
                 if (res) {
+                    console.log(res);
                     setUserRole(res?.data?.results?.UserRoles[0]?.Role?.name);
                     setUserName(res?.data?.results?.username.toUpperCase())
                     setToken(res?.data?.results?.token);
-                    setTermsAndCondition(res?.data?.results?.terms_n_conditions)
-                    if (res?.data?.results?.terms_n_conditions === true) {
+                    setUserToken(res?.data?.results?.token)
+                    if (res?.data?.results?.terms_n_conditions == true) {
+                        setTermsAndCondition(res?.data?.results?.terms_n_conditions)
                         Toast(false, res?.data?.message);
                         navigate('/dashboard');
                     } else {
@@ -35,34 +38,32 @@ const Login = () => {
                     }
                 }
             }).catch((err) => {
+                console.log(err);
                 Toast(true, err.response.data.message);
             })
         }
     }
 
     const handleAcceptTerms = () => {
-        if(acceptTerms){
+        if (acceptTerms) {
             terms_Condition(
+                token,
                 {
                     "terms_n_conditions": acceptTerms
                 }
             ).then((res) => {
-                if(res)
-               if(res){
-                Toast(false , 'Logged in Successfully')
-                navigate('/dashboard')
-               }
+                if (res)
+                    if (res) {
+                        Toast(false, 'Logged in Successfully')
+                        navigate('/dashboard')
+                    }
             }).catch((err) => {
                 console.log(err);
             })
-        }else{
-            Toast(true , "Please Accept terms to access dashboard")
+        } else {
+            Toast(true, "Please Accept terms to access dashboard")
         }
-       
     }
-
-
-
     return (
         <div>
             <div className="container-fluid p-0">
@@ -184,7 +185,7 @@ const Login = () => {
                 keyboard={false}
             >
                 <Modal.Header closeButton>
-                    <Modal.Title>T&C for sales dashboard usage</Modal.Title>
+                    <Modal.Title>Terms & Conditions</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <p>
@@ -199,7 +200,7 @@ const Login = () => {
                     </p>
                     <div className="row">
                         <div className="col-1">
-                            <input type="checkbox" onChange={(e)=>setTerms(e.target.checked)} />
+                            <input type="checkbox" onChange={(e) => setTerms(e.target.checked)} />
                         </div>
                         <div className="col-11">
                             <p>I agree to all the Terms & Condition</p>
