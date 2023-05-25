@@ -1,4 +1,5 @@
 import React from 'react'
+import CommingSoon from '../common/CommingSoon'
 
 const Produnction = () => {
     return (
@@ -15,6 +16,10 @@ const Produnction = () => {
 
                             </div>
                         </div>
+                    </div>
+                    <div className='row'>
+                        <CommingSoon/>
+
                     </div>
                 </div>
                 {/* <!-- container-fluid --> */}
