@@ -120,7 +120,6 @@ const UploadBrand = () => {
                                                         {
                                                             userDetails.map((item) => {
                                                                 return (
-
                                                                     <span id='user_id' onClick={(e) => { setUserDrop({ toggle: false, heading: item.User.username }); handleCreateBrand(e, item) }} class="dropdown-item cursor-pointer">{item.User.username}</span>
                                                                 )
                                                             })

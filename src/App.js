@@ -7,14 +7,12 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { getTermsAndCondition, getToken } from './helper/token.helper';
 import ForgotPassword from './pages/ForgotPassword';
-import { calculatebrandPerfomance } from './GraphData/allGraph';
-import Toast from './common/Toast';
 // Login module routes check over here
 const App = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  useEffect(() => {
+  useEffect(() => { 
     // checking while component is being mounted weather it is auth check or not
     if (location.pathname === "" || location.pathname === "/") {
       navigate("/login");
@@ -35,9 +33,7 @@ const App = () => {
     );
   };
 
-  useEffect(()=>{
-    calculatebrandPerfomance()
-  },[])
+
 
   return (
     <Fragment>

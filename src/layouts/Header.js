@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import Toast from "../common/Toast";
 import Logo from "../assets/images/zashedlogo.png"
 import Avatar from "../assets/images/avatar-1.jpg"
+import "./layout.css"
 
 
 
@@ -35,10 +36,10 @@ const Header = ({
             <div className="navbar-brand-box">
               <Link to='#' href="#" className="logo logo-dark">
                 <span className="logo-sm">
-                  <img src={Logo} alt="Logo" className='ms-1' height="22" width="20" />
+                  <img src={Logo} alt="Logo"  className='ms-1 rotateLogo' height="22" width="20" />
                 </span>
                 <span className="logo-lg">
-                  <img src={Logo} alt="Logo" height="40" width="50" />
+                  <img src={Logo} alt="Logo" className='rotateLogo' height="40" width="50" />
                 </span>
               </Link>
               <span className="logo logo-light">

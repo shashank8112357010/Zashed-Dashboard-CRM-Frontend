@@ -18,7 +18,7 @@ const Produnction = () => {
                         </div>
                     </div>
                     <div className='row'>
-                        <CommingSoon/>
+                        <CommingSoon text="Production comming soon"/>
 
                     </div>
                 </div>

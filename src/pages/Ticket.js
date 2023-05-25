@@ -2,6 +2,7 @@ import React from 'react'
 import CommingSoon from '../common/CommingSoon'
 
 const Ticket = () => {
+    const array=["mohit" , "vinay" ,{name:"shashank"}]
   return (
     <div className="main-content">
     <div className="page-content">
@@ -17,7 +18,7 @@ const Ticket = () => {
                     </div>
                 </div>
             </div>
-            <CommingSoon/>
+            <CommingSoon  text="Tickt comming soon" shashank={array}/>
         </div>
     </div>
 

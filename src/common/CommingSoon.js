@@ -1,10 +1,10 @@
 import React from 'react'
 import CommingSoonLogo from "../assets/coming-soon.svg"
 
-const CommingSoon = () => {
+const CommingSoon = (props) => {
+    console.log(props);
     return (
         <>
-
             <div className="pt-sm-3">
                 <div className="container">
                     <div className="row">
@@ -17,7 +17,7 @@ const CommingSoon = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <h4 className="mt-2">Comming Soon</h4>
+                                <h4 className="mt-2">{props.text}</h4>
                                 <div className="row justify-content-center mt-5">
                                     <div className="col-md-8">
                                         <div data-countdown="2021/12/31" className="counter-number"></div>
