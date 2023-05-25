@@ -1,4 +1,5 @@
 import React from 'react'
+import CommingSoon from '../common/CommingSoon'
 
 const Ticket = () => {
   return (
@@ -16,6 +17,7 @@ const Ticket = () => {
                     </div>
                 </div>
             </div>
+            <CommingSoon/>
         </div>
     </div>
 

@@ -38,11 +38,20 @@ const AdminSales = () => {
         })
     }
     useEffect(() => {
-        setLineChart()
-        setData()
+
+
         getAllBrands();
         getAllCommissionData();
         getAllRevinew();
+
+        return () => {
+            console.log("code clenup");
+            setLineChart()
+            setzashedCommissionComposition();
+            setPieChartRevenueCompositionByBrandsData();
+            setData();
+            setDataa();
+        }
     }, []);
     return (
         <div className="main-content">

@@ -24,7 +24,6 @@ const Login = () => {
         } else if (credentials.username && credentials.password) {
             login(credentials).then((res) => {
                 if (res) {
-                    console.log(res);
                     setUserRole(res?.data?.results?.UserRoles[0]?.Role?.name);
                     setUserName(res?.data?.results?.username.toUpperCase())
                     setToken(res?.data?.results?.token);
@@ -55,6 +54,7 @@ const Login = () => {
                 if (res)
                     if (res) {
                         Toast(false, 'Logged in Successfully')
+                        setTerms(false)
                         navigate('/dashboard')
                     }
             }).catch((err) => {

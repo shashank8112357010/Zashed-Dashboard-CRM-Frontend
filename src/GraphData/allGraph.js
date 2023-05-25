@@ -21,18 +21,15 @@ const initialData = {
 export const calculatebrandPerfomance = () => {
     // revenue
     getSalesRevenue().then((res) => {
-        console.log(res);
         initialData.brandPerformanceseries[0].data = (res?.data?.results?.brandDetails.map((item) => item.totalRevenue))
         initialData.brandPerformanceQuantitySeries[0].data = (res?.data?.results?.brandDetails.map((item) => item.totalSales))
         initialData.xaxis = res?.data?.results?.brandDetails?.map((item) => item.brand_name);
         initialData.compositionByBrandsSeries = (res?.data?.results?.brandDetails.map((item) => parseFloat(item.revenueComposition)))
-        initialData.chartOptions.lables = res?.data?.results?.brandDetails?.map((item) => item.brand_name);
     }).catch((err) => {
         console.log(err);
     });
     // commission
     getSalesCommission().then((res) => {
-        console.log(res);
         initialData.zashedCommissionCompositionSeries = (res?.data?.results?.brandDetails.map((item) => parseFloat(item.commissionComposition)))
 
     }).catch((err) => {
@@ -40,7 +37,6 @@ export const calculatebrandPerfomance = () => {
     })
     // month wise data
     getSalesMonthOnMonth().then((res) => {
-        console.log(res);
     }).catch((err) => {
         console.log(err);
     })

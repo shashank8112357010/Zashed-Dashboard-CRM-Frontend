@@ -20,7 +20,6 @@ const UploadBrand = () => {
     })
     const getUserDetails = () => {
         getClientUser().then((res) => {
-            console.log(res);
             setUserDetails(res.data.results)
         }).catch((err) => {
             console.log(err);
@@ -64,7 +63,6 @@ const UploadBrand = () => {
             formData.append('file', createFormData.file)
             formData.append('user_id', createFormData.user_id)
             formData.append('name', createFormData.name)
-            console.log(formData);
             setDropDownHeading("Select")
             createBrand(formData).then((res) => {
             }).catch((err) => {
@@ -121,7 +119,6 @@ const UploadBrand = () => {
                                                     >
                                                         {
                                                             userDetails.map((item) => {
-                                                                console.log("item", item);
                                                                 return (
 
                                                                     <span id='user_id' onClick={(e) => { setUserDrop({ toggle: false, heading: item.User.username }); handleCreateBrand(e, item) }} class="dropdown-item cursor-pointer">{item.User.username}</span>

@@ -1,4 +1,5 @@
 import React from 'react'
+import CommingSoon from '../common/CommingSoon'
 
 const ClientSales = () => {
   return (
@@ -13,6 +14,7 @@ const ClientSales = () => {
                     </div>
                 </div>
             </div>
+            <CommingSoon/>
         </div>
     </div>
 

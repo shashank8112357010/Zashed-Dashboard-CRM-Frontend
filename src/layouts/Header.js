@@ -58,13 +58,21 @@ const Header = ({
             <div className="dropdown d-inline-block">
               <button type="button" onClick={() => setprofile(!profile)} className={profile ? "btn header-item waves-effect show" : "btn header-item waves-effect"} id="page-header-user-dropdown"
                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <img className="rounded-circle header-profile-user" src={Avatar}
-                  alt="Header Avatar" />
-                <span className="d-none d-xl-inline-block ms-1" key="t-henry">{userName}</span>
-                <i className="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
+
+                <div class="profile-container d-flex justify-content-center align-items-center">
+
+                  <span className='rounded-circle header-profile-user fs-20'><i className='bx bxs-user-circle ' style={{
+                    fontSize: '27px',
+                    background: 'transparent !important'
+                  }}></i></span>
+          
+                  <span className="d-none d-xl-inline-block ms-1" key="t-henry">{userName}</span>
+                  <i className="mdi mdi-chevron-down  d-none d-xl-inline-block"></i>
+
+                </div>
               </button>
               <div className={profile ? "dropdown-menu dropdown-menu-end show drop-showing" : "dropdown-menu dropdown-menu-end"}>
-                <label className="dropdown-item cursor-pointer" ><i className="bx bx-upload font-size-16 align-middle me-1"></i> <span key="t-profile"><Link to="/uploadbrands" onClick={()=>setprofile(false)}>Upload Brand</Link></span></label>
+                <label className="dropdown-item cursor-pointer" ><i className="bx bx-upload font-size-16 align-middle me-1"></i> <span key="t-profile"><Link to="/uploadbrands" onClick={() => setprofile(false)}>Upload Brand</Link></span></label>
                 {/* <label className="dropdown-item d-block" href="#"><span className="badge bg-success float-end">11</span><i className="bx bx-wrench font-size-16 align-middle me-1"></i> <span key="t-settings">Settings</span></label>
                 <label className="dropdown-item" href="#"><i className="bx bx-lock-open font-size-16 align-middle me-1"></i> <span key="t-lock-screen">Lock screen</span></label> */}
                 <div className="dropdown-divider"></div>
