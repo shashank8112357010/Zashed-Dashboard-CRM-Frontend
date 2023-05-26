@@ -270,8 +270,8 @@ a:hover {
     text-decoration: underline
 }
 
-a:not([href]):not([class]),
-a:not([href]):not([class]):hover {
+a:not([href]):not([className]),
+a:not([href]):not([className]):hover {
     color: inherit;
     text-decoration: none
 }
@@ -18633,7 +18633,7 @@ input[type=checkbox].tui-full-calendar-checkbox-round+span {
     color: #50a5f1
 }
 
-.swal2-icon.swal2-success [class^=swal2-success-line] {
+.swal2-icon.swal2-success [className^=swal2-success-line] {
     background-color: #34c38f
 }
 

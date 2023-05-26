@@ -60,7 +60,7 @@ const Header = ({
               <button type="button" onClick={() => setprofile(!profile)} className={profile ? "btn header-item waves-effect show" : "btn header-item waves-effect"} id="page-header-user-dropdown"
                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 
-                <div class="profile-container d-flex justify-content-center align-items-center">
+                <div className="profile-container d-flex justify-content-center align-items-center">
 
                   <span className='rounded-circle header-profile-user fs-20'><i className='bx bxs-user-circle ' style={{
                     fontSize: '27px',

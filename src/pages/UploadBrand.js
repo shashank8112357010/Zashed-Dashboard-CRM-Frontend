@@ -111,16 +111,16 @@ const UploadBrand = () => {
                                             </div>
                                             <div className='col-6'>
                                                 <label className='text-muted fs-12'>User Name</label>
-                                                <div class="dropdown">
-                                                    <button class="btn btn- dropdown-toggle px-5" onClick={() => setUserDrop((prev) => ({ ...prev, toggle: !dropDownToggle.toggle }))} type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <div className="dropdown">
+                                                    <button className="btn btn- dropdown-toggle px-5" onClick={() => setUserDrop((prev) => ({ ...prev, toggle: !dropDownToggle.toggle }))} type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                         {openUserDrop.heading}
                                                     </button>
-                                                    <div class={` dropdown-menu ${openUserDrop.toggle && 'show d-block'}`} aria-labelledby="dropdownMenuButton"
+                                                    <div className={` dropdown-menu ${openUserDrop.toggle && 'show d-block'}`} aria-labelledby="dropdownMenuButton"
                                                     >
                                                         {
                                                             userDetails.map((item) => {
                                                                 return (
-                                                                    <span id='user_id' onClick={(e) => { setUserDrop({ toggle: false, heading: item.User.username }); handleCreateBrand(e, item) }} class="dropdown-item cursor-pointer">{item.User.username}</span>
+                                                                    <span id='user_id' onClick={(e) => { setUserDrop({ toggle: false, heading: item.User.username }); handleCreateBrand(e, item) }} className="dropdown-item cursor-pointer">{item.User.username}</span>
                                                                 )
                                                             })
                                                         }

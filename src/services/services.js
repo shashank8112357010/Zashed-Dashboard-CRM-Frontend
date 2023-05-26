@@ -52,3 +52,14 @@ export const getSalesRevenue = async () => {
 export const getSalesMonthOnMonth = async () => {
   return await axios.post(`${backendapi}/sales/monthlyRevenue`,{}, config)
 }
+
+export const getAllBrandData = async (body) => {
+  return await axios.post(`${backendapi}/brand/getBrandData`,body, config)
+}
+export const createTicket = async (body) => {
+  return await axios.post(`${backendapi}/ticket/createTicket`,body, config)
+}
+export const getAllTicket = async () => {
+  return await axios.get(`${backendapi}/ticket/getTickets`,  config)
+}
+

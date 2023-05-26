@@ -2,7 +2,6 @@ import React from 'react'
 import CommingSoonLogo from "../assets/coming-soon.svg"
 
 const CommingSoon = (props) => {
-    console.log(props);
     return (
         <>
             <div className="pt-sm-3">

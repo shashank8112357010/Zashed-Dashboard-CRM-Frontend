@@ -1,9 +1,23 @@
-import React from 'react'
+import React, { useState } from 'react'
 import CommingSoon from '../common/CommingSoon'
 import { Link } from 'react-router-dom'
 import "./pages.css"
+import { getAllBrandData } from '../services/services'
+import { useEffect } from 'react'
 
 const ClientSales = () => {
+    const [brandData, setBrandData] = useState()
+
+    const fetchBrandData = () => {
+        getAllBrandData().then((res) => {
+            console.log(res);
+            setBrandData(res?.data?.results)
+        }).catch((err) => console.log(err))
+
+    }
+    useEffect(() => {
+        fetchBrandData()
+    }, [])
     return (
         <div className="main-content">
             <div className="page-content">
@@ -30,7 +44,7 @@ const ClientSales = () => {
                                     <div className="d-flex">
                                         <div className="flex-grow-1">
                                             <p className="text-muted fw-bold font-size-16">Total Revenue</p>
-                                            <h4 className="mb-0">1,235</h4>
+                                            <h4 className="mb-0">{brandData?.totalRevenue}</h4>
                                         </div>
                                         <div className="flex-shrink-0 align-self-center ">
                                             <div className="avatar-sm rounded-circle bg-primary mini-stat-icon">
@@ -64,21 +78,15 @@ const ClientSales = () => {
                                 </div>
                             </div>
                         </div>
-
                     </div>
-
-
-
                     <div className='row d-flex justify-content-between align-items-center'>
-
-
                         <div className='col-sm-6'>
                             <div className='card my-2'>
                                 <div className='card-body'>
                                     <div className="d-flex">
                                         <div className="flex-grow-1">
                                             <p className="text-muted fw-bold font-size-16">Orders</p>
-                                            <h4 className="mb-0">1,235</h4>
+                                            <h4 className="mb-0">{brandData?.totalQty}</h4>
                                         </div>
 
                                         <div className="flex-shrink-0 align-self-center ">
@@ -127,7 +135,7 @@ const ClientSales = () => {
                                     <div className="d-flex">
                                         <div className="flex-grow-1">
                                             <p className="text-muted fw-bold font-size-16">Return</p>
-                                            <h4 className="mb-0">1,235</h4>
+                                            <h4 className="mb-0">{brandData?.totalReturn}</h4>
                                         </div>
 
                                         <div className="flex-shrink-0 align-self-center ">
