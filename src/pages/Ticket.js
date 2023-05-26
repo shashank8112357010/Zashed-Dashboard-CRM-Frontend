@@ -114,7 +114,6 @@ const Ticket = () => {
                                 <tbody>
                                     {
                                         allticketData && allticketData.map((ticket, index) => {
-                                            console.log(ticket);
                                             return (
                                                 <tr>
                                                     <td>{index}</td>

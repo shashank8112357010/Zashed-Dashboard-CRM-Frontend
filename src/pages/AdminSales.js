@@ -4,6 +4,7 @@ import Chart from "react-apexcharts";
 import "./pages.css"
 import { getBrands, getSalesCommission, getSalesRevenue, getAllBrandData } from '../services/services';
 import { Form } from 'react-bootstrap';
+import Toast from "../common/Toast"
 import AdminBrandSelect from './AdminBrandSelect';
 const AdminSales = () => {
     const [loading, setLoading] = useState(false);
@@ -81,9 +82,15 @@ const AdminSales = () => {
         series: []
     })
     const [allBrandData, setAllBrandData] = useState();
+    const todatDate = new Date().toLocaleDateString('en-CA');
+    const [fromSelectDate , setfromSelectDate] = useState()
+    const [filter , setFilter ] = useState({
+        isSearch:false,
+        start_date:null,
+        end_date:null
+    })
     const fetchRevenue = () => {
         getSalesRevenue().then((res) => {
-            console.log(res, "revenue");
             setTotalRevenue(res?.data?.results?.totalRevenue);
             const yaxisbrandperformance = res?.data?.results?.brandDetails?.map((item) => item?.totalRevenue);
             const yaxisbrandperformanceQuantity = res?.data?.results?.brandDetails?.map((item) => item?.totalSales);
@@ -150,7 +157,6 @@ const AdminSales = () => {
     }
     const fetchCommission = () => {
         getSalesCommission().then((res) => {
-            console.log(res, "commission");
             settotalCommission(res?.data?.results?.totalCommission);
             const zashedCommissionseries = res?.data?.results?.brandDetails?.map((item) => +item?.commissionComposition);
 
@@ -182,7 +188,6 @@ const AdminSales = () => {
 
     const fetchBrand = () => {
         getBrands().then((res) => {
-            console.log(res);
             setAllBrands(res.data.results)
         }).catch((err) => {
             console.log(err);
@@ -190,7 +195,6 @@ const AdminSales = () => {
     }
     const fetchBrandData = () => {
         getAllBrandData().then((res) => {
-            console.log(res?.data?.results?.brand_data, "allbranddata");
             const brandFilterSeries = res?.data?.results?.brand_data?.map((item) => {
                 return {
                     name: item?.brand_name,
@@ -200,7 +204,6 @@ const AdminSales = () => {
             const brandSeriesXaxis = res?.data?.results?.brand_data?.map((item) => {
                 return item?.yearlyRevenueData[0]?.monthlyRevenueData?.map((item) => item?.month)
             })
-            console.log(brandFilterSeries, brandSeriesXaxis);
             brandFilterSeries ? setLoading(true) : setLoading(false)
             setAllBrandData((prev) => ({
                 ...prev,
@@ -218,13 +221,42 @@ const AdminSales = () => {
                 "brand_ids": [id],
             }).then((res) => {
                 setSelectedBrandData(res.data.results)
-                console.log(res, "selected");
             }).catch((err) => {
                 console.log(err);
             })
         }
        
        
+    }
+    const selectedDateBrandData = (e)=>{
+        const {innerText} = e.target;
+        const filterBrandId = allBrands.filter((item)=>item.name === selectBrand);
+        if(filterBrandId.length != 0){
+            const id = filterBrandId[0].id
+            if(innerText === "Search"){
+                var body={
+                    "brand_ids": [id],
+                    "start_date" : filter.start_date ? filter.start_date : "",
+                    "end_date" : filter.end_date ? filter.end_date : ""
+                }
+                setFilter((prev) => ({...prev , isSearch:true}))
+            }else if(innerText == "Reset"){
+                var body ={
+                    "brand_ids": [id],
+                }
+                document.getElementById('from').value = todatDate;
+                document.getElementById('to').value = todatDate;
+
+                setFilter((prev) => ({...prev , isSearch:false , start_date:todatDate , end_date:todatDate}))
+            }
+            getAllBrandData(body).then((res) => {
+                setSelectedBrandData(res.data.results);
+                
+            }).catch((err) => {
+                console.log(err);
+            })
+        }
+
     }
     useEffect(() => {
         fetchRevenue();
@@ -235,20 +267,26 @@ const AdminSales = () => {
     return (
 
         <div className="main-content">
-            {
-                console.log(allBrandData, "hello")
-            }
             <div className="page-content">
                 <div className="container-fluid">
-                    <div className="row mb-4">
+                    <div className="row mb-5">
                         <div className="col-sm-12">
                             <div className="page-title-box d-flex align-items-center justify-content-between">
-                                <h2 className="mb-sm-0 font-size-20">{selectBrand} Sales</h2>
+                                <h2 className="mb-sm-0 font-size-20">{selectBrand} Sales </h2>
+                                <div className={`${selectBrand === "All Brands" ? "d-none" : "d-flex"}`}>
+                                    <div className='d-flex justify-content-center align-items-center'>
+                                    <label className='mb-0 mx-1'>From</label>  <input type='date' id='from' defaultValue={todatDate} onChange={(e)=>setFilter((prev) => ({...prev , start_date:e.target.value , isSearch:false}))} className='form-control'/>
+                                    </div>
+                                    <div className='d-flex justify-content-center align-items-center mx-3'> 
+                                    <label  className='mb-0 mx-1'>To</label> <input type='date' id='to' defaultValue={todatDate} onChange={(e)=>setFilter((prev) => ({...prev , end_date:e.target.value , isSearch:false}))} min={filter?.start_date} className='form-control'/>
+                                    </div>
+                                    <button className='btn btn-md bg-primary text-white' onClick={selectedDateBrandData}>{filter?.isSearch ? "Reset" : "Search"}</button>
+
+                                </div>
                                 <Form.Select aria-label="Default select example" onClick={(e) => { setSelectBrands(e.target.value); fetchSelectedBrand(e.target.value) }} className='w-25 bg-primary text-white'>
                                     <option value={"All Brands"}>{"All Brands"}</option>
                                     {
                                         allBrands && allBrands?.map((brand) => {
-                                            // console.log();
                                             return (
                                                 <>
                                                     <option key={brand?.name.toString()} id={brand?.id} value={brand?.name}>{brand?.name}</option>

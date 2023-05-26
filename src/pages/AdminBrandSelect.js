@@ -4,6 +4,8 @@ import ReactApexChart from 'react-apexcharts';
 const AdminBrandSelect = ({
     branddata
 }) => {
+  
+    // console.log();
     const brandDetails = branddata?.brand_data?.map((item) => item);
     const [discountPie, setDiscountPie] = useState({
         series: [44, 55, 13, 43, 22],
@@ -49,7 +51,7 @@ const AdminBrandSelect = ({
     })
     const [monthonmonthLine, setmonthonmonthLine] = useState({
         series: [{
-            name:  [brandDetails && brandDetails[0]?.brand_name],
+            name: [brandDetails && brandDetails[0]?.brand_name],
             data: [10, 41, 35, 51, 49, 62, 69, 91, 148]
         }],
         options: {
@@ -84,7 +86,7 @@ const AdminBrandSelect = ({
     })
     const [yearonyearLine, setyearonyearLine] = useState({
         series: [{
-            name: [ brandDetails && brandDetails[0].brand_name],
+            name: [brandDetails && brandDetails[0].brand_name],
             data: [4, 41, 35, 6, 91, 33, 69, 66, 148]
         }],
         options: {
@@ -117,6 +119,7 @@ const AdminBrandSelect = ({
         },
 
     })
+
     return (
         <>
             <div className='row'>

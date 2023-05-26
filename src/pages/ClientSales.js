@@ -10,7 +10,6 @@ const ClientSales = () => {
 
     const fetchBrandData = () => {
         getAllBrandData().then((res) => {
-            console.log(res);
             setBrandData(res?.data?.results)
         }).catch((err) => console.log(err))
 

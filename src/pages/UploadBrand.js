@@ -85,7 +85,6 @@ const UploadBrand = () => {
 
     const fetchBrands=()=>{
         getBrands().then((res)=>{
-            console.log(res.data.results);
             setBrandData(res.data.results)
         }).catch((err)=>console.log(err))
     }
