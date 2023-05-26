@@ -3,8 +3,19 @@ import { createBrand, getClientUser } from '../services/services';
 import { useEffect } from 'react';
 import Form from 'react-bootstrap/Form';
 import Toast from '../common/Toast';
+import Dropdown from 'react-bootstrap/Dropdown';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+import Table from 'react-bootstrap/Table';
+import { getBrands } from '../services/services';
 
 const UploadBrand = () => {
+
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+    const [brandData , setBrandData] = useState()
     const [dropDownHeading, setDropDownHeading] = useState('Select');
     const [dropDownToggle, setDropDownToggle] = useState(false);
     const [openUserDrop, setUserDrop] = useState({
@@ -71,79 +82,143 @@ const UploadBrand = () => {
         }
 
     }
+
+    const fetchBrands=()=>{
+        getBrands().then((res)=>{
+            console.log(res.data.results);
+            setBrandData(res.data.results)
+        }).catch((err)=>console.log(err))
+    }
     useEffect(() => {
+        fetchBrands();
         getUserDetails()
     }, [])
 
     return (
         <div className="main-content">
-            <div className="page-content">
+            <div className="page-content" style={{ height: '100vh' }}>
                 <div className="container-fluid">
                     {/* <!-- start page title --> */}
                     <div className="row">
                         <div className="col-12">
                             <div className="page-title-box d-sm-flex align-items-center justify-content-between">
                                 <h4 className="mb-sm-0 font-size-18">Upload Brands</h4>
-                                <div className="dropdown">
-                                    <button className="btn btn-secondary dropdown-toggle p-1" onClick={() => setDropDownToggle(!dropDownToggle)} style={{ minWidth: "120px" }} href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                                        {dropDownHeading}
-                                    </button>
-                                    <ul className={`dropdown-menu  ${dropDownToggle && 'show'}`} aria-labelledby="dropdownMenuLink">
-                                        <li className='dropdown-item cursor-pointer' onClick={() => { setDropDownHeading('Upload new Brands'); setDropDownToggle(false) }} >Upload new Brands</li>
-                                        <li className='dropdown-item cursor-pointer' onClick={() => { setDropDownHeading('Update Existing one'); setDropDownToggle(false) }} >Update Existing one</li>
-                                    </ul>
-                                </div>
+                                <Dropdown className='me-4'>
+                                    <Dropdown.Toggle variant="primary" id="dropdown-basic">
+                                       Choose Options
+                                    </Dropdown.Toggle>
+
+                                    <Dropdown.Menu>
+                                        <Dropdown.Item onClick={handleShow}>Create Brand</Dropdown.Item>
+                                        <Dropdown.Item >Upload Existing</Dropdown.Item>
+                                    </Dropdown.Menu>
+                                </Dropdown>
+
                             </div>
 
 
                         </div>
                     </div>
-                    {/* Upload brand UI */}
-                    {
-                        dropDownHeading === 'Upload new Brands' ?
-                            <div className='row d-flex justify-content-center mt-5 '>
-                                <div className='col-6 p-4 card '>
-                                    <div className='card-body'>
-                                        <div className='row'>
-                                            <div className='col-6'>
-                                                <label className='text-muted fs-12'>Brand Name</label>
-                                                <input className='form-control' placeholder='Type brand name' id="brand_name" onChange={(e) => handleCreateBrand(e)} />
+
+
+                    <Modal show={show} onHide={handleClose}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Create Brand</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                        <div className='card-body'>
+                                <div className='row'>
+                                    <div className='col-6'>
+                                        <label className='text-muted fs-12'>Brand Name</label>
+                                        <input className='form-control' placeholder='Type brand name' id="brand_name" onChange={(e) => handleCreateBrand(e)} />
+                                    </div>
+                                    <div className='col-6'>
+                                        <label className='text-muted fs-12'>Select User</label>
+                                        <div className="dropdown">
+                                            <button className="btn btn- dropdown-toggle px-5" onClick={() => setUserDrop((prev) => ({ ...prev, toggle: !dropDownToggle.toggle }))} type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                {openUserDrop.heading}
+                                            </button>
+                                            <div className={` dropdown-menu ${openUserDrop.toggle && 'show d-block'}`} aria-labelledby="dropdownMenuButton"
+                                            >
+                                                {
+                                                    userDetails.map((item) => {
+                                                        return (
+                                                            <span id='user_id' onClick={(e) => { setUserDrop({ toggle: false, heading: item.User.username }); handleCreateBrand(e, item) }} className="dropdown-item cursor-pointer">{item.User.username}</span>
+                                                        )
+                                                    })
+                                                }
                                             </div>
-                                            <div className='col-6'>
-                                                <label className='text-muted fs-12'>User Name</label>
-                                                <div className="dropdown">
-                                                    <button className="btn btn- dropdown-toggle px-5" onClick={() => setUserDrop((prev) => ({ ...prev, toggle: !dropDownToggle.toggle }))} type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        {openUserDrop.heading}
-                                                    </button>
-                                                    <div className={` dropdown-menu ${openUserDrop.toggle && 'show d-block'}`} aria-labelledby="dropdownMenuButton"
-                                                    >
-                                                        {
-                                                            userDetails.map((item) => {
-                                                                return (
-                                                                    <span id='user_id' onClick={(e) => { setUserDrop({ toggle: false, heading: item.User.username }); handleCreateBrand(e, item) }} className="dropdown-item cursor-pointer">{item.User.username}</span>
-                                                                )
-                                                            })
-                                                        }
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className='mt-3'>
-                                            <label className='text-muted fs-12'>Upload Brand</label> <input className='form-control' id="brand-sheet" type='file' onChange={(e) => handleCreateBrand(e)} />
-                                        </div>
-                                        <div className='row p-2 mt-4'>
-                                            <div className='col-6'><button className='btn btn-md btn-danger'>cancel</button></div>
-                                            <div className='col-6 d-flex justify-content-end'><button className='btn btn-md btn-primary' onClick={handelCreateBrandSubmit}>Create Brand</button></div>
                                         </div>
                                     </div>
                                 </div>
+                                <div className='mt-3'>
+                                    <label className='text-muted fs-12'>Upload Brand</label> <input className='form-control' id="brand-sheet" type='file' onChange={(e) => handleCreateBrand(e)} />
+                                </div>
+                               
                             </div>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="danger" onClick={handleClose}>
+                                Close
+                            </Button>
+                            <Button variant="primary"  onClick={handelCreateBrandSubmit} >
+                                Create
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
 
-                            :
-                            dropDownHeading === 'Update Existing one' ?
-                                <h1>Hello</h1>
-                                : ""
-                    }
+
+                    {/* table  */}
+                    <Table striped bordered hover>
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>Brand Name</th>
+          <th>Created At</th>
+          <th>Updated At</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+            brandData && brandData.map((brand)=>{
+                return (
+                    <tr>
+                    <td>{brand?.id}</td>
+                    <td>{brand?.name}</td>
+                    <td>{brand?.createdAt.slice(0,10)}</td>
+                    <td>{brand?.updatedAt.slice(0,10)}</td>
+                  </tr>
+                )
+            })
+        }
+       
+ 
+      </tbody>
+    </Table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+
                 </div>
             </div>
         </div>

@@ -7,8 +7,10 @@ import { createTicket, getAllTicket } from '../services/services';
 import Toast from "../common/Toast"
 import { useEffect } from 'react';
 import Table from 'react-bootstrap/Table';
+import { getUserRole } from '../helper/token.helper';
 
 const Ticket = () => {
+
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -41,8 +43,8 @@ const Ticket = () => {
     }
     useEffect(() => {
         fetchTicket();
-      return () => {
-        console.log("clenup");
+        return () => {
+            console.log("clenup");
             setallTicketData([])
         }
     }, [])
@@ -100,30 +102,35 @@ const Ticket = () => {
                                 <thead>
                                     <tr>
                                         <th>ID</th>
+                                        {getUserRole() === "Admin" && <th>Name</th>}
+
                                         <th>Subject</th>
                                         <th>Message</th>
                                         <th>Created At</th>
                                         <th>Status</th>
+                                        {getUserRole() === "Admin" && <th>Action</th>}
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {
                                         allticketData && allticketData.map((ticket, index) => {
+                                            console.log(ticket);
                                             return (
                                                 <tr>
                                                     <td>{index}</td>
+                                                    {getUserRole() === "Admin" && <td>{ticket?.User?.username}</td>}
+
                                                     <td>{ticket.subject}</td>
                                                     <td>{ticket.message}</td>
                                                     <td>{new Date(ticket.createdAt).toDateString()}</td>
-
                                                     <td className={ticket.status === 'Pending' ? 'text-warning cursor-pointer' : 'text-success'}>{ticket.status}</td>
+                                        {getUserRole() === "Admin" && <td><button className='btn btn-secondary btn-sm'>Resolve</button></td>}
+
                                                 </tr>
                                             )
                                         })
 
                                     }
-
-
                                 </tbody>
                             </Table>
                         </div>
