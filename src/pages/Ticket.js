@@ -68,6 +68,14 @@ const Ticket = () => {
             resolveTicket(body).then((res) => {
                 handleResolveClose();
                 fetchTicket();
+                setResolveModalData({
+                    name: null,
+                    subject: null,
+                    message: null,
+                    ticket_id: null,
+                    responseMessage: null
+            
+                })
                 Toast(false, "Ticket Resolved")
 
             }).catch((err) => {
