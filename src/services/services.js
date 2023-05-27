@@ -36,6 +36,9 @@ export const changePassword = async (body) => {
 export const createBrand = async (body) => {
   return await axios.post(`${backendapi}/brand/createBrand`, body, config)
 }
+export const updateExistingBrand = async (body) => {
+  return await axios.put(`${backendapi}/brand/updateBrandSales`, body, config)
+}
 
 export const getBrands = async () => {
   return await axios.get(`${backendapi}/brand/listBrands`, config)
@@ -63,3 +66,6 @@ export const getAllTicket = async () => {
   return await axios.get(`${backendapi}/ticket/getTickets`,  config)
 }
 
+export const resolveTicket = async (data) => {
+  return await axios.put(`${backendapi}/ticket/updateTicket`, data, config)
+}

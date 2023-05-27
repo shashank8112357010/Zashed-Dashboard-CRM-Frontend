@@ -4,9 +4,15 @@ import ReactApexChart from 'react-apexcharts';
 const AdminBrandSelect = ({
     branddata
 }) => {
+    console.log(branddata?.brand_data);
   
     // console.log();
     const brandDetails = branddata?.brand_data?.map((item) => item);
+    // const [yearlydata] = brandDetails;
+    // const {yearlyRevenueData} =yearlydata;
+    // const [yearObj] =yearlyRevenueData
+    // const {monthlyRevenueData} = yearObj;
+    // console.log(monthlyRevenueData);
     const [discountPie, setDiscountPie] = useState({
         series: [44, 55, 13, 43, 22],
         options: {

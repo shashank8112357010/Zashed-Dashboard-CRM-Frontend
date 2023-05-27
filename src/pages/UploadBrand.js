@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { createBrand, getClientUser } from '../services/services';
+import { createBrand, getClientUser, updateExistingBrand } from '../services/services';
 import { useEffect } from 'react';
 import Form from 'react-bootstrap/Form';
 import Toast from '../common/Toast';
@@ -12,10 +12,15 @@ import { getBrands } from '../services/services';
 const UploadBrand = () => {
 
     const [show, setShow] = useState(false);
+    const [showUpdateBrand, setShowUpdateBrand] = useState(false);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-    const [brandData , setBrandData] = useState()
+    const handleUpdateBrandShow = () => setShowUpdateBrand(true)
+    const handleUpdateBrandHide = () => setShowUpdateBrand(false)
+
+
+    const [brandData, setBrandData] = useState()
     const [dropDownHeading, setDropDownHeading] = useState('Select');
     const [dropDownToggle, setDropDownToggle] = useState(false);
     const [openUserDrop, setUserDrop] = useState({
@@ -28,6 +33,10 @@ const UploadBrand = () => {
         name: null,
         user_id: null
 
+    })
+    const [updateBrand, setUpdateBrands] = useState({
+        brand_name: null,
+        file: null
     })
     const getUserDetails = () => {
         getClientUser().then((res) => {
@@ -83,10 +92,25 @@ const UploadBrand = () => {
 
     }
 
-    const fetchBrands=()=>{
-        getBrands().then((res)=>{
+    const fetchBrands = () => {
+        getBrands().then((res) => {
             setBrandData(res.data.results)
-        }).catch((err)=>console.log(err))
+        }).catch((err) => console.log(err))
+    }
+
+    const handleUpdateBrand = () => {
+        const brandId = brandData.filter((item) => item.name === updateBrand.brand_name)
+        const [obj] = brandId
+        let formData = new FormData()
+        formData.append('file', updateBrand?.file)
+        formData.append('brand_id', obj?.id);
+        updateExistingBrand(formData).then((res) => {
+            Toast(false, "Updated successfully");
+            handleUpdateBrandHide()
+        }).catch((err) => {
+            console.log("something went wrong ");
+        })
+
     }
     useEffect(() => {
         fetchBrands();
@@ -104,12 +128,12 @@ const UploadBrand = () => {
                                 <h4 className="mb-sm-0 font-size-18">Upload Brands</h4>
                                 <Dropdown className='me-4'>
                                     <Dropdown.Toggle variant="primary" id="dropdown-basic">
-                                       Choose Options
+                                        Choose Options
                                     </Dropdown.Toggle>
 
                                     <Dropdown.Menu>
                                         <Dropdown.Item onClick={handleShow}>Create Brand</Dropdown.Item>
-                                        <Dropdown.Item >Upload Existing</Dropdown.Item>
+                                        <Dropdown.Item onClick={handleUpdateBrandShow}>Upload Existing</Dropdown.Item>
                                     </Dropdown.Menu>
                                 </Dropdown>
 
@@ -119,13 +143,16 @@ const UploadBrand = () => {
                         </div>
                     </div>
 
-
-                    <Modal show={show} onHide={handleClose}>
+                    {/* create brand modal  */}
+                    <Modal show={show} onHide={handleClose} 
+                     backdrop="static"
+                     keyboard={false}
+                    >
                         <Modal.Header closeButton>
                             <Modal.Title>Create Brand</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                        <div className='card-body'>
+                            <div className='card-body'>
                                 <div className='row'>
                                     <div className='col-6'>
                                         <label className='text-muted fs-12'>Brand Name</label>
@@ -153,47 +180,93 @@ const UploadBrand = () => {
                                 <div className='mt-3'>
                                     <label className='text-muted fs-12'>Upload Brand</label> <input className='form-control' id="brand-sheet" type='file' onChange={(e) => handleCreateBrand(e)} />
                                 </div>
-                               
+
                             </div>
                         </Modal.Body>
                         <Modal.Footer>
                             <Button variant="danger" onClick={handleClose}>
                                 Close
                             </Button>
-                            <Button variant="primary"  onClick={handelCreateBrandSubmit} >
+                            <Button variant="primary" onClick={handelCreateBrandSubmit} >
                                 Create
                             </Button>
                         </Modal.Footer>
                     </Modal>
+                    {/* create brand modal ends */}
+
+                    {/* update brand modal starts */}
+                    <Modal show={showUpdateBrand} onHide={handleUpdateBrandHide} 
+                     backdrop="static"
+                     keyboard={false}
+                    >
+                        <Modal.Header closeButton>
+                            <Modal.Title>Update Existing Brand</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <div className='row px-3'>
+                                <label className='text-muted fs-12'>Choose Brand</label>
+                                <Form.Select aria-label="Default select example" onClick={(e) => setUpdateBrands((prev) => ({ ...prev, brand_name: e.target.value }))}>
+                                    {
+                                        brandData && brandData?.map((brand) => {
+                                            {
+                                                console.log(brand);
+                                            }
+                                            return (
+                                                <option value={brand.name}>{brand.name}</option>
+                                            )
+                                        })
+
+                                    }
+
+
+                                </Form.Select>
+
+
+                            </div>
+                            <div className='mt-3'>
+                                <label className='text-muted fs-12'>Upload Brand</label> <input className='form-control' id="brand-sheet" type='file' onChange={(e) => setUpdateBrands((prev) => ({ ...prev, file: e.target.files[0] }))} />
+                            </div>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={handleUpdateBrandHide}>
+                                Close
+                            </Button>
+                            <Button variant="primary" onClick={handleUpdateBrand}>
+                                Save Changes
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
+                    {/* update brand modal ends */}
+
 
 
                     {/* table  */}
                     <Table striped bordered hover>
-      <thead>
-        <tr>
-          <th>Id</th>
-          <th>Brand Name</th>
-          <th>Created At</th>
-          <th>Updated At</th>
-        </tr>
-      </thead>
-      <tbody>
-        {
-            brandData && brandData.map((brand)=>{
-                return (
-                    <tr>
-                    <td>{brand?.id}</td>
-                    <td>{brand?.name}</td>
-                    <td>{brand?.createdAt.slice(0,10)}</td>
-                    <td>{brand?.updatedAt.slice(0,10)}</td>
-                  </tr>
-                )
-            })
-        }
-       
- 
-      </tbody>
-    </Table>
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Brand Name</th>
+                                <th>Created At</th>
+                                <th>Updated At</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                brandData && brandData.map((brand) => {
+                                    return (
+                                        <tr>
+                                            <td>{brand?.id}</td>
+                                            <td>{brand?.name}</td>
+                                            <td>{brand?.createdAt.slice(0, 10)}</td>
+                                            <td>{brand?.updatedAt.slice(0, 10)}</td>
+                                        </tr>
+                                    )
+                                })
+                            }
+
+
+                        </tbody>
+                    </Table>
 
 
 
@@ -216,7 +289,7 @@ const UploadBrand = () => {
 
 
 
-                
+
 
                 </div>
             </div>
