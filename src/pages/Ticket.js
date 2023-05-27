@@ -40,6 +40,10 @@ const Ticket = () => {
             createTicket(ticketData).then((res) => {
                 fetchTicket()
                 Toast(false, "Ticket Created Successfull");
+                setTicketData({
+                    subject: null,
+                    message: null
+                })
                 handleClose();
             })
         }
@@ -138,6 +142,7 @@ const Ticket = () => {
                                         <th>Subject</th>
                                         <th>Message</th>
                                         <th>Created At</th>
+                                        <th>Response</th>
                                         <th>Status</th>
                                         {getUserRole() === "Admin" && <th>Action</th>}
                                     </tr>
@@ -150,10 +155,10 @@ const Ticket = () => {
                                                 <tr>
                                                     <td>{index}</td>
                                                     {getUserRole() === "Admin" && <td>{ticket?.User?.username}</td>}
-
                                                     <td>{ticket.subject}</td>
                                                     <td>{ticket.message}</td>
                                                     <td>{new Date(ticket.createdAt).toDateString()}</td>
+                                                    <td>{ticket?.feedback ? ticket?.feedback : "-"}</td>
                                                     <td className={ticket.status === 'Pending' ? 'text-warning cursor-pointer' : 'text-success'}>{ticket.status}</td>
                                                     {getUserRole() === "Admin" && <td><button className='btn btn-secondary btn-sm' disabled={ticket.status === "Resolved"} onClick={() => { setResolveModalData((prev) => ({ ...prev, name: ticket?.User?.username, subject: ticket.subject, message: ticket.message, ticket_id: ticket?.id })); handleResolveShow() }}>Resolve</button></td>}
 
