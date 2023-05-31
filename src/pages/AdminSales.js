@@ -9,10 +9,11 @@ import AdminBrandSelect from './AdminBrandSelect';
 const AdminSales = () => {
     const [loading, setLoading] = useState(false);
     const [selectBrand, setSelectBrands] = useState('All Brands');
-    const [selectedBrandData , setSelectedBrandData] = useState([])
+    const [selectedBrandData, setSelectedBrandData] = useState([])
     const [totalRevenue, setTotalRevenue] = useState(null);
     const [totalCommission, settotalCommission] = useState(null);
     const [allBrands, setAllBrands] = useState([]);
+    const [filterBrandId , setFilterBrandId] = useState(null)
     const [brandPerformance, setBrandPerformance] = useState({
         options: {
             chart: {
@@ -83,11 +84,11 @@ const AdminSales = () => {
     })
     const [allBrandData, setAllBrandData] = useState();
     const todatDate = new Date().toLocaleDateString('en-CA');
-    const [fromSelectDate , setfromSelectDate] = useState()
-    const [filter , setFilter ] = useState({
-        isSearch:false,
-        start_date:null,
-        end_date:null
+    const [fromSelectDate, setfromSelectDate] = useState()
+    const [filter, setFilter] = useState({
+        isSearch: false,
+        start_date: null,
+        end_date: null
     })
     const fetchRevenue = () => {
         getSalesRevenue().then((res) => {
@@ -215,52 +216,17 @@ const AdminSales = () => {
     }
     const fetchSelectedBrand = (data) => {
         setLoading(true)
-        const filterBrandId = allBrands.filter((item)=>item.name === data);
-        if(filterBrandId.length != 0){
-            const id = filterBrandId[0].id
-            getAllBrandData({
-                "brand_ids": [id],
-            }).then((res) => {
-                setSelectedBrandData(res.data.results);
-                setTimeout(()=>{
-
-                    setLoading(false)
-                },[3000])
-            }).catch((err) => {
-                console.log(err);
-            })
-        }
-       
-       
+        const id = allBrands.filter((item) => item.name === data);
+        setFilterBrandId(id[0]?.id)
     }
-    const selectedDateBrandData = (e)=>{
-        const {innerText} = e.target;
-        const filterBrandId = allBrands.filter((item)=>item.name === selectBrand);
-        if(filterBrandId.length != 0){
-            const id = filterBrandId[0].id
-            if(innerText === "Search"){
-                var body={
-                    "brand_ids": [id],
-                    "start_date" : filter.start_date ? filter.start_date : "",
-                    "end_date" : filter.end_date ? filter.end_date : ""
-                }
-                setFilter((prev) => ({...prev , isSearch:true}))
-            }else if(innerText == "Reset"){
-                var body ={
-                    "brand_ids": [id],
-                }
-                document.getElementById('from').value = todatDate;
-                document.getElementById('to').value = todatDate;
-
-                setFilter((prev) => ({...prev , isSearch:false , start_date:todatDate , end_date:todatDate}))
-            }
-            getAllBrandData(body).then((res) => {
-                setSelectedBrandData(res.data.results);
-                
-            }).catch((err) => {
-                console.log(err);
-            })
+    const selectedDateBrandData = (e) => {
+        const { innerText } = e.target;
+        if(innerText === "Reset") {
+            document.getElementById('from').value = todatDate;
+            document.getElementById('to').value = todatDate;
+            setFilter((prev) => ({ ...prev, isSearch: false, start_date: null, end_date: null }))
         }
+      
 
     }
     useEffect(() => {
@@ -280,15 +246,15 @@ const AdminSales = () => {
                                 <h2 className="mb-sm-0 font-size-20">{selectBrand} Sales </h2>
                                 <div className={`${selectBrand === "All Brands" ? "d-none" : "d-flex"}`}>
                                     <div className='d-flex justify-content-center align-items-center'>
-                                    <label className='mb-0 mx-1'>From</label>  <input type='date' id='from' defaultValue={todatDate} onChange={(e)=>setFilter((prev) => ({...prev , start_date:e.target.value , isSearch:false}))} className='form-control'/>
+                                        <label className='mb-0 mx-1'>From</label>  <input type='date' id='from' defaultValue={todatDate} onChange={(e) => setFilter((prev) => ({ ...prev, start_date: e.target.value, isSearch: false }))} className='form-control' />
                                     </div>
-                                    <div className='d-flex justify-content-center align-items-center mx-3'> 
-                                    <label  className='mb-0 mx-1'>To</label> <input type='date' id='to' defaultValue={todatDate} onChange={(e)=>setFilter((prev) => ({...prev , end_date:e.target.value , isSearch:false}))} min={filter?.start_date} className='form-control'/>
+                                    <div className='d-flex justify-content-center align-items-center mx-3'>
+                                        <label className='mb-0 mx-1'>To</label> <input type='date' id='to' defaultValue={todatDate} onChange={(e) => setFilter((prev) => ({ ...prev, end_date: e.target.value, isSearch: false }))} min={filter?.start_date} className='form-control' />
                                     </div>
-                                    <button className='btn btn-md bg-primary text-white' onClick={selectedDateBrandData}>{filter?.isSearch ? "Reset" : "Search"}</button>
+                                    <button className='btn btn-md bg-primary text-white' onClick={selectedDateBrandData}>Reset</button>
 
                                 </div>
-                                <Form.Select aria-label="Default select example" onClick={(e) => { setSelectBrands(e.target.value); fetchSelectedBrand(e.target.value) }} className='w-25 bg-primary text-white'>
+                                <Form.Select aria-label="Default select example" onChange={(e) => { setSelectBrands(e.target.value); fetchSelectedBrand(e.target.value) }} className='w-25 bg-primary text-white'>
                                     <option value={"All Brands"}>{"All Brands"}</option>
                                     {
                                         allBrands && allBrands?.map((brand) => {
@@ -318,7 +284,7 @@ const AdminSales = () => {
                                                     <div className="flex-shrink-0 align-self-center ">
                                                         <div className="avatar-sm rounded-circle bg-primary mini-stat-icon">
                                                             <span className="avatar-title rounded-circle bg-primary">
-                                                                <i className="bx bx-archive-in font-size-24"></i>
+                                                                <i className="bx bx-rupee font-size-24"></i>
                                                             </span>
                                                         </div>
                                                     </div>
@@ -335,7 +301,7 @@ const AdminSales = () => {
                                                     <div className="flex-shrink-0 align-self-center ">
                                                         <div className="avatar-sm rounded-circle bg-primary mini-stat-icon">
                                                             <span className="avatar-title rounded-circle bg-primary">
-                                                                <i className="bx bx-archive-in font-size-24"></i>
+                                                                <i className="bx bx-rupee font-size-24"></i>
                                                             </span>
                                                         </div>
                                                     </div>
@@ -437,7 +403,7 @@ const AdminSales = () => {
                                 </div>
                             </>
                         ) :
-                            <AdminBrandSelect loading ={loading} branddata={selectedBrandData} />
+                            <AdminBrandSelect loading={loading} BrandId ={filterBrandId} startDate={filter.start_date ? filter.start_date : ""} endDate={filter.end_date ? filter.end_date : ""} />
                     }
 
                 </div>

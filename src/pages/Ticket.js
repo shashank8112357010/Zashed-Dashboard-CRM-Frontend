@@ -279,7 +279,6 @@ const Ticket = () => {
                                 <tbody>
                                     {
                                         allticketData && allticketData.map((ticket, index) => {
-                                            console.log(ticket, "ticket");
                                             return (
                                                 <tr>
                                                     <td>{index}</td>

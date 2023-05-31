@@ -208,9 +208,7 @@ const UploadBrand = () => {
                                 <Form.Select aria-label="Default select example" onClick={(e) => setUpdateBrands((prev) => ({ ...prev, brand_name: e.target.value }))}>
                                     {
                                         brandData && brandData?.map((brand) => {
-                                            {
-                                                console.log(brand);
-                                            }
+                                          
                                             return (
                                                 <option value={brand.name}>{brand.name}</option>
                                             )
