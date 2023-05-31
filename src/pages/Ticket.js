@@ -8,19 +8,30 @@ import Toast from "../common/Toast"
 import { useEffect } from 'react';
 import Table from 'react-bootstrap/Table';
 import { getUserRole } from '../helper/token.helper';
+import { getClientUser } from '../services/services';
 
 const Ticket = () => {
 
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    const handleShow = () => {
+        setTicketData((prev) => ({...prev ,subject:"Invoice" }))
+        setShow(true);
+    };
     const [showResolve, setResolveTicket] = useState(false);
     const handleResolveClose = () => setResolveTicket(false);
     const handleResolveShow = () => setResolveTicket(true);
+    const [responseAdminToggle, setResponseAdminMessage] = useState(false);
+    const [adminTicketId, setAdminTicketId] = useState(null)
     const [allticketData, setallTicketData] = useState([])
+    const [clients, setClients] = useState([])
+    const [responsemessage, setresponsetoAdmin] = useState(null)
     const [ticketData, setTicketData] = useState({
-        subject: null,
-        message: null
+        subject: 'Invoice',
+        message: null,
+        userId: null,
+        adminMessage: null
+
     })
     const [resolveModalData, setResolveModalData] = useState({
         name: null,
@@ -31,22 +42,40 @@ const Ticket = () => {
 
     })
     const handleTicketSubmit = () => {
-        if (ticketData.subject === null) {
-            Toast(true, "Fill Subject");
-        } else if (ticketData.message === null) {
-            Toast(true, "Fill message");
+        if (getUserRole() === "Admin") {
+            if (ticketData.adminMessage === null) {
+                Toast(true, "Fill message")
+            }
+            else if (ticketData.userId === null) {
+                Toast(true, "Select User");
+            }
+        } else if (getUserRole() === "Client") {
+            if (ticketData.subject === null) {
+                Toast(true, "Fill Subject");
+            } else if (ticketData.message === null) {
+                Toast(true, "Fill message");
+            }
         }
-        else if (ticketData.subject && ticketData.message) {
-            createTicket(ticketData).then((res) => {
-                fetchTicket()
-                Toast(false, "Ticket Created Successfull");
-                setTicketData({
-                    subject: null,
-                    message: null
-                })
-                handleClose();
+
+
+        let adminBody = {
+            userId: ticketData?.userId,
+            adminMessage: ticketData?.adminMessage
+        }
+        let clientBody = {
+            subject: ticketData?.subject,
+            message: ticketData?.message
+        }
+        const role = getUserRole()
+        createTicket(role === "Admin" ? adminBody : clientBody).then((res) => {
+            fetchTicket();
+            Toast(false, "Ticket Created Successfull");
+            setTicketData({
+                subject: null,
+                message: null
             })
-        }
+            handleClose();
+        })
     }
     const fetchTicket = () => {
         getAllTicket().then((res) => {
@@ -57,35 +86,92 @@ const Ticket = () => {
         })
     }
 
-    const handleResolveTicket = () => {
-        if (!resolveModalData?.responseMessage) {
-            Toast(true, "Please enter response message")
-        } else {
-            let body = {
-                ticketId: resolveModalData?.ticket_id,
-                feedback: resolveModalData?.responseMessage
-            }
-            resolveTicket(body).then((res) => {
-                handleResolveClose();
-                fetchTicket();
-                setResolveModalData({
-                    name: null,
-                    subject: null,
-                    message: null,
-                    ticket_id: null,
-                    responseMessage: null
-            
+    const handleResolveTicket = (e) => {
+        console.log("res", e.target.innerText);
+        var body
+        if (e.target.innerText === 'Resolve') {
+            if (!resolveModalData?.responseMessage) {
+                Toast(true, "Please enter response message")
+               
+            }else {
+                body = {
+                    ticketId: resolveModalData?.ticket_id,
+                    feedback: resolveModalData?.responseMessage
+                }
+                resolveTicket(body).then((res) => {
+                    handleResolveClose();
+                    fetchTicket();
+                    setAdminTicketId(null);
+                    setresponsetoAdmin(null);
+                    setResponseAdminMessage(false)
+                    setResolveModalData({
+                        name: null,
+                        subject: null,
+                        message: null,
+                        ticket_id: null,
+                        responseMessage: null
+    
+                    })
+                    Toast(false, "Ticket Resolved")
+    
+                }).catch((err) => {
+                    console.log(err);
                 })
-                Toast(false, "Ticket Resolved")
+            }
+        } else if (e.target.innerText === 'Respond') {
+            if (!responsemessage) {
+                Toast(true, "Please enter response message")
+            } else { 
+                body = {
+                    ticketId: adminTicketId,
+                    message: responsemessage
+                }
 
-            }).catch((err) => {
-                console.log(err);
-            })
+                resolveTicket(body).then((res) => {
+                    handleResolveClose();
+                    fetchTicket();
+                    setAdminTicketId(null);
+                    setresponsetoAdmin(null);
+                    setResponseAdminMessage(false)
+                    setResolveModalData({
+                        name: null,
+                        subject: null,
+                        message: null,
+                        ticket_id: null,
+                        responseMessage: null
+    
+                    })
+                    Toast(false, "Respond send to admin ")
+    
+                }).catch((err) => {
+                    console.log(err);
+                })
+            }
+          
         }
+     
 
+    }
+    const fetchClients = () => {
+        getClientUser().then((res) => {
+            console.log(res, "response");
+            const cliientData = res.data?.results?.map((item) => {
+                return {
+                    name: item?.User.username,
+                    user_id: item?.User.id
+                }
+
+            })
+            setClients(cliientData)
+        }).catch((err) => console.log(err));
+    }
+    const filteruserId = (e) => {
+        const user = clients.filter((item) => item.name === e.target.value);
+        setTicketData((prev) => ({ ...prev, userId: user[0]?.user_id }))
     }
     useEffect(() => {
         fetchTicket();
+        fetchClients();
         return () => {
             console.log("clenup");
             setallTicketData([])
@@ -106,27 +192,60 @@ const Ticket = () => {
                             </div>
                         </div>
                     </div>
-                    <Modal show={show} onHide={handleClose}>
+                    <Modal show={show} onHide={handleClose} backdrop="static">
                         <Modal.Header closeButton>
                             <Modal.Title>Ticket</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
                             <Form>
-                                <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                                    <Form.Label>Subject</Form.Label>
-                                    <Form.Control
-                                        type="text"
-                                        placeholder="subject..."
-                                        autoFocus
-                                        onChange={(e) => setTicketData((prev) => ({ ...prev, subject: e.target.value }))}
-                                    />
+                                <Form.Group
+                                    className="mb-3"
+                                    controlId="exampleForm.ControlTextarea1"
+                                >
+                                    {
+                                        getUserRole() === "Admin" &&
+                                        <select className="form-select" onClick={(e) => filteruserId(e)} aria-label="Default select example">
+                                            <option selected  >Select User</option>
+                                            {
+                                                clients?.map((item) => {
+                                                    return (
+                                                        <option id={item.id} value={item.name}>{item.name}</option>
+                                                    )
+                                                })
+                                            }
+
+                                        </select>
+                                    }
+
                                 </Form.Group>
+                                {
+                                    getUserRole() === "Client" &&
+                                    <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                                        <Form.Label>Subject</Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            placeholder="subject..."
+                                            autoFocus
+                                            defaultValue='Invoice'
+                                            onChange={(e) => setTicketData((prev) => ({ ...prev, subject: e.target.value }))}
+                                        />
+                                    </Form.Group>
+
+                                }
+
                                 <Form.Group
                                     className="mb-3"
                                     controlId="exampleForm.ControlTextarea1"
                                 >
                                     <Form.Label>Message</Form.Label>
-                                    <Form.Control as="textarea" placeholder='message...' onChange={(e) => setTicketData((prev) => ({ ...prev, message: e.target.value }))} rows={3} />
+                                    {
+                                        getUserRole() === "Admin" ?
+                                            <Form.Control as="textarea" placeholder='message...' onChange={(e) => setTicketData((prev) => ({ ...prev, adminMessage: e.target.value }))} rows={3} />
+                                            :
+                                            <Form.Control as="textarea" placeholder='message...' onChange={(e) => setTicketData((prev) => ({ ...prev, message: e.target.value }))} rows={3} />
+
+                                    }
+
                                 </Form.Group>
                             </Form>
                         </Modal.Body>
@@ -150,26 +269,30 @@ const Ticket = () => {
                                         <th>Subject</th>
                                         <th>Message</th>
                                         <th>Created At</th>
+                                        
+                                        <th>Sellor Response</th>
                                         <th>Response</th>
                                         <th>Status</th>
-                                        {getUserRole() === "Admin" && <th>Action</th>}
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {
                                         allticketData && allticketData.map((ticket, index) => {
-                                            console.log(ticket);
+                                            console.log(ticket, "ticket");
                                             return (
                                                 <tr>
                                                     <td>{index}</td>
                                                     {getUserRole() === "Admin" && <td>{ticket?.User?.username}</td>}
-                                                    <td>{ticket.subject}</td>
-                                                    <td>{ticket.message}</td>
+                                                    <td>{ticket.subject || 'Admin'}</td>
+                                                    <td>{ticket.message || ticket?.admin_message}</td>
                                                     <td>{new Date(ticket.createdAt).toDateString()}</td>
+                                                    <td>{ticket?.admin_message ? ticket?.admin_message : "-"}</td>
                                                     <td>{ticket?.feedback ? ticket?.feedback : "-"}</td>
-                                                    <td className={ticket.status === 'Pending' ? 'text-warning cursor-pointer' : 'text-success'}>{ticket.status}</td>
-                                                    {getUserRole() === "Admin" && <td><button className='btn btn-secondary btn-sm' disabled={ticket.status === "Resolved"} onClick={() => { setResolveModalData((prev) => ({ ...prev, name: ticket?.User?.username, subject: ticket.subject, message: ticket.message, ticket_id: ticket?.id })); handleResolveShow() }}>Resolve</button></td>}
 
+                                                    <td className={ticket.status === 'Pending' ? 'text-warning cursor-pointer' : 'text-success'}>{ticket.status}</td>
+                                                    {getUserRole() === "Admin" && <td><button className='btn btn-secondary btn-sm' disabled={ticket.status === "Resolved"} onClick={() => { setResolveModalData((prev) => ({ ...prev, name: ticket?.User?.username, subject: ticket?.subject, message: ticket?.message ||ticket?.admin_message, ticket_id: ticket?.id })); handleResolveShow() }}>Resolve</button></td>}
+                                                    {getUserRole() === "Client" && ticket?.admin_message != null ? <td><button className='btn btn-primary btn-md' disabled={ticket.message != null} onClick={(e) => { setResponseAdminMessage(true); setAdminTicketId(ticket?.id) }}>{ticket.message != null ? "Replied" : "Reply"}</button></td> : <td> - </td>}
                                                 </tr>
                                             )
                                         })
@@ -180,7 +303,7 @@ const Ticket = () => {
                         </div>
                     </div>
 
-                    {/* resolve ticket modal  */}
+                    {/* resolve ticket modal admin  */}
                     <Modal
                         show={showResolve}
                         onHide={handleResolveClose}
@@ -192,7 +315,7 @@ const Ticket = () => {
                         </Modal.Header>
                         <Modal.Body>
                             <div className='mt-3'>
-                                <label className='text-muted fs-12'>Subject</label> <span className='form-control'> {resolveModalData?.subject}</span>
+                                <label className='text-muted fs-12'>Subject</label> <span className='form-control'> {resolveModalData?.subject || "Admin"}</span>
                             </div>
                             <div className='mt-3'>
                                 <label className='text-muted fs-12'>Issue</label>  <span className='form-control'> {resolveModalData?.message}</span>
@@ -212,6 +335,36 @@ const Ticket = () => {
                             <Button variant="primary" onClick={handleResolveTicket}>Resolve</Button>
                         </Modal.Footer>
                     </Modal>
+
+                    {/* response to admin by client  */}
+                    <Modal
+                        show={responseAdminToggle}
+                        onHide={() => setResponseAdminMessage(false)}
+                        backdrop="static"
+                        keyboard={false}
+                    >
+                        <Modal.Header closeButton>
+                            <Modal.Title>{"Admin response"}</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+
+                            <Form.Group
+                                className="my-3"
+                                controlId="exampleForm.ControlTextarea1"
+                            >
+                                <Form.Label className='ms-1'>Response Message</Form.Label>
+                                <Form.Control as="textarea" placeholder='message...' onChange={(e) => setresponsetoAdmin(e.target.value)} rows={3} />
+                            </Form.Group>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={() => setResponseAdminMessage(false)}>
+                                Close
+                            </Button>
+                            <Button variant="primary" onClick={handleResolveTicket}>Respond</Button>
+                        </Modal.Footer>
+                    </Modal>
+
+
 
 
                 </div>

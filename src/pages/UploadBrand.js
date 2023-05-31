@@ -161,7 +161,7 @@ const UploadBrand = () => {
                                     <div className='col-6'>
                                         <label className='text-muted fs-12'>Select User</label>
                                         <div className="dropdown">
-                                            <button className="btn btn- dropdown-toggle px-5" onClick={() => setUserDrop((prev) => ({ ...prev, toggle: !dropDownToggle.toggle }))} type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <button className="btn btn-dropdown-toggle px-5" onClick={() => setUserDrop((prev) => ({ ...prev, toggle: !dropDownToggle.toggle }))} type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 {openUserDrop.heading}
                                             </button>
                                             <div className={` dropdown-menu ${openUserDrop.toggle && 'show d-block'}`} aria-labelledby="dropdownMenuButton"

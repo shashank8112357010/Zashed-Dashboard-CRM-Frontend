@@ -1,18 +1,17 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ReactApexChart from 'react-apexcharts';
+import Chart from "react-apexcharts";
 
-const AdminBrandSelect = ({
-    branddata
-}) => {
-    console.log(branddata?.brand_data);
-  
-    // console.log();
-    const brandDetails = branddata?.brand_data?.map((item) => item);
-    // const [yearlydata] = brandDetails;
-    // const {yearlyRevenueData} =yearlydata;
-    // const [yearObj] =yearlyRevenueData
-    // const {monthlyRevenueData} = yearObj;
-    // console.log(monthlyRevenueData);
+
+const AdminBrandSelect = (props) => {
+    console.log(props);
+    useEffect(()=>{
+        const brandDetails = props?.branddata?.brand_data?.map((item) => item);
+        const data = brandDetails?.map((item)=>item)
+        const [value] = data && data
+        console.log(value);
+    },[props.branddata])
+    
     const [discountPie, setDiscountPie] = useState({
         series: [44, 55, 13, 43, 22],
         options: {
@@ -33,7 +32,7 @@ const AdminBrandSelect = ({
                 }
             }]
         },
-    })
+    });
     const [bestPricePie, setbestPricePie] = useState({
         series: [44, 55, 13, 43, 22],
         options: {
@@ -54,45 +53,30 @@ const AdminBrandSelect = ({
                 }
             }]
         },
-    })
-    const [monthonmonthLine, setmonthonmonthLine] = useState({
-        series: [{
-            name: [brandDetails && brandDetails[0]?.brand_name],
-            data: [10, 41, 35, 51, 49, 62, 69, 91, 148]
-        }],
-        options: {
-            chart: {
-                height: 350,
-                type: 'line',
-                zoom: {
-                    enabled: false
+    });
+    const [monthonmonthBar, setmonthonmonthBar] = useState(
+        {
+            options: {
+                chart: {
+                    id: "basic-bar"
+                },
+                xaxis: {
+                    categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998]
                 }
             },
-            dataLabels: {
-                enabled: false
-            },
-            stroke: {
-                curve: 'straight'
-            },
-            title: {
-                text: 'Product Trends by Month',
-                align: 'left'
-            },
-            grid: {
-                row: {
-                    colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
-                    opacity: 0.5
-                },
-            },
-            xaxis: {
-                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
-            }
-        },
+            series: [
+                {
+                    name: "series-1",
+                    data: [30, 40, 45, 50, 49, 60, 70, 91]
+                }
+            ]
 
-    })
+        }
+
+    )
     const [yearonyearLine, setyearonyearLine] = useState({
         series: [{
-            name: [brandDetails && brandDetails[0].brand_name],
+            name: 'amma',
             data: [4, 41, 35, 6, 91, 33, 69, 66, 148]
         }],
         options: {
@@ -128,157 +112,8 @@ const AdminBrandSelect = ({
 
     return (
         <>
-            <div className='row'>
-                <div className='col-sm-4'>
-                    <div className="card mini-stats-wid">
-                        <div className="card-body">
-                            <div className="d-flex">
-                                <div className="flex-grow-1">
-                                    <p className="text-muted fw-medium">Total Revenue</p>
-                                    <h4 className="mb-3">{brandDetails && brandDetails[0]?.totalBrandRevenue || "0"}</h4>
-                                </div>
-                                <div className="flex-shrink-0 align-self-center ">
-                                    <div className="avatar-sm rounded-circle bg-primary mini-stat-icon">
-                                        <span className="avatar-title rounded-circle bg-primary">
-                                            <i className="bx bx-archive-in font-size-24"></i>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className='col-sm-4'>
-                    <div className="card mini-stats-wid">
-                        <div className="card-body">
-                            <div className="d-flex">
-                                <div className="flex-grow-1">
-                                    <p className="text-muted fs-16 fw-medium">Zashed Commission</p>
-                                    <h4 className="mb-2">{brandDetails && brandDetails[0]?.totalBrandCommission || '0'}</h4>
-                                </div>
-                                <div className="flex-shrink-0 align-self-center ">
-                                    <div className="avatar-sm rounded-circle bg-primary mini-stat-icon">
-                                        <span className="avatar-title rounded-circle bg-primary">
-                                            <i className="bx bx-archive-in font-size-24"></i>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div className='col-sm-4'>
-                    <div className="card mini-stats-wid">
-                        <div className="card-body">
-                            <div className="d-flex">
-                                <div className="flex-grow-1">
-                                    <p className="text-muted fs-16 fw-medium">Monthly Sales Growth</p>
-                                    <h4 className="mb-2">{'sales growth data' || '0'}</h4>
-                                </div>
-                                <div className="flex-shrink-0 align-self-center ">
-                                    <div className="avatar-sm rounded-circle bg-primary mini-stat-icon">
-                                        <span className="avatar-title rounded-circle bg-primary">
-                                            <i className="bx bx-archive-in font-size-24"></i>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div className='row my-3'>
-                <div className='col-sm-6'>
-                    <div className="card mini-stats-wid">
-                        <div className="card-body">
-                            <div className="d-flex">
-                                <div className="flex-grow-1">
-                                    <p className="text-muted fw-medium">Return %</p>
-                                    <h4 className="mb-3">{brandDetails && brandDetails[0]?.totalBrandReturn || "0"}</h4>
-                                </div>
-                                <div className="flex-shrink-0 align-self-center ">
-                                    <div className="avatar-sm rounded-circle bg-primary mini-stat-icon">
-                                        <span className="avatar-title rounded-circle bg-primary">
-                                            <i className="bx bx-archive-in font-size-24"></i>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-                <div className='col-sm-6'>
-                    <div className="card mini-stats-wid">
-                        <div className="card-body">
-                            <div className="d-flex">
-                                <div className="flex-grow-1">
-                                    <p className="text-muted fw-medium">Photo Shoot Commission</p>
-                                    <h4 className="mb-3">{"0"}</h4>
-                                </div>
-                                <div className="flex-shrink-0 align-self-center ">
-                                    <div className="avatar-sm rounded-circle bg-primary mini-stat-icon">
-                                        <span className="avatar-title rounded-circle bg-primary">
-                                            <i className="bx bx-archive-in font-size-24"></i>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div className='row my-3'>
-                <div className='col-sm-6'>
-                    <h4>Year on Year Sales</h4>
-                    <div className="card">
-                        <div className="card-body">
-                            <ReactApexChart options={yearonyearLine.options} series={yearonyearLine.series} type="line" height={350} />
-                        </div>
-                    </div>
-                </div>
-
-                <div className='col-sm-6'>
-                    <h4>Month on Month Sales</h4>
-                    <div className="card">
-                        <div className="card-body">
-                            <ReactApexChart options={monthonmonthLine.options} series={monthonmonthLine.series} type="line" height={350} />
-
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div className='row my-3'>
-                <div className='col-sm-6'>
-                    <h4>Best price point</h4>
-                    <div className="card">
-                        <div className="card-body">
-                            <ReactApexChart options={bestPricePie.options} series={bestPricePie.series} type="pie" width={380} />
-
-                        </div>
-                    </div>
-                </div>
-                <div className='col-sm-6'>
-                    <h4>Best Discount point</h4>
-                    <div className="card">
-                        <div className="card-body">
-                            <ReactApexChart options={discountPie.options} series={discountPie.series} type="pie" width={380} />
-
-
-                            {/* <Chart options={brandRevenueComposition?.options} series={brandRevenueComposition?.series} type="donut" width="380" /> */}
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-
-
+       hello
+          
         </>
 
     )

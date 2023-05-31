@@ -214,13 +214,18 @@ const AdminSales = () => {
         })
     }
     const fetchSelectedBrand = (data) => {
+        setLoading(true)
         const filterBrandId = allBrands.filter((item)=>item.name === data);
         if(filterBrandId.length != 0){
             const id = filterBrandId[0].id
             getAllBrandData({
                 "brand_ids": [id],
             }).then((res) => {
-                setSelectedBrandData(res.data.results)
+                setSelectedBrandData(res.data.results);
+                setTimeout(()=>{
+
+                    setLoading(false)
+                },[3000])
             }).catch((err) => {
                 console.log(err);
             })
@@ -432,7 +437,7 @@ const AdminSales = () => {
                                 </div>
                             </>
                         ) :
-                            <AdminBrandSelect branddata={selectedBrandData} />
+                            <AdminBrandSelect loading ={loading} branddata={selectedBrandData} />
                     }
 
                 </div>
